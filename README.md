@@ -35,13 +35,20 @@ projects.
 
 ## License
 
-Copyright (c) 2026 TamKungZ_. **All rights reserved.** See [LICENSE](LICENSE) for the full text.
+This repository is a hosting service, so **each package has the license of its own project**;
+publishing here does not change it. See [LICENSE](LICENSE) and the
+[License page](https://packages.tamkungz.me/license/).
 
-In short: you may download and install the packages and artifacts from this repository to build,
-test or run your own projects. You may **not** redistribute, mirror or rehost them, sell or
-sublicense them, or use this repository to build unofficial mirrors. An individual package may
-carry its own license (in its POM, documentation or project page); if so, that license applies to
-that package. Without one, all rights are reserved.
+In short:
+
+- You may download and install packages with your package manager to use, build or test software,
+  under that package's own license.
+- Official distribution repositories and established community repositories may mirror packages
+  when the package's license allows it.
+- Please do **not** create unofficial personal mirrors, PPAs or independently hosted copies of this
+  repository without permission.
+- The website, repository metadata, names and branding are Copyright (c) 2026 TamKungZ_,
+  all rights reserved.
 
 ## Contributing and reporting problems
 
