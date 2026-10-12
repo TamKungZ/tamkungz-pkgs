@@ -107,11 +107,12 @@ jobs:
   deploy:
     needs: ingest
     if: needs.ingest.outputs.changed == 'true'
+    runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: read
-      pages: write
-      id-token: write
-    uses: ./.github/workflows/deploy.yml
-    with:
-      ref: ${{ needs.ingest.outputs.sha }}
-    secrets: inherit
+    steps:
+      - name: Trigger deployment for latest main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
