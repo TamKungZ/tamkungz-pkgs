@@ -17,12 +17,6 @@ on:
       - "examples/**"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
-  workflow_call:
-    inputs:
-      ref:
-        description: Commit to build (publish.yml passes the commit it just pushed)
-        type: string
-        required: false
 
 # Never two deployments at once, never cancel one half-way.
 # (publish.yml uses a different group on purpose: a reusable workflow in the caller's group deadlocks.)
