@@ -51,7 +51,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            apt-utils dpkg-dev createrepo-c pacman-package-manager libarchive-tools gnupg
+            apt-utils dpkg-dev createrepo-c pacman-package-manager makepkg libarchive-tools gnupg
 
       - run: npm ci
 
