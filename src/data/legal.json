@@ -2,40 +2,97 @@
   {
     "slug": "terms",
     "title": "Terms of Use",
-    "description": "Terms for using TamKungZ_ Packages.",
+    "description": "Rules for using TamKungZ_ Packages, including downloads, mirroring, acceptable use, and availability.",
     "sections": [
+      {
+        "heading": "Acceptance of these terms",
+        "paragraphs": [
+          "By visiting packages.tamkungz.me, or by downloading anything from it with a browser or a package manager, you agree to these Terms of Use. If you do not agree, please do not use the repository.",
+          "These terms cover how the repository and website may be used. The license of each individual package is covered separately on the License page."
+        ]
+      },
       {
         "heading": "Repository purpose",
         "paragraphs": [
-          "TamKungZ_ Packages is a package repository used to host packages and release artifacts published by TamKungZ_ for easier installation and download.",
-          "You may use this repository with supported package managers and build tools to download, install, update, build, test, or use packages published here."
+          "TamKungZ_ Packages is a package repository that hosts packages and release artifacts published by TamKungZ_ so they are easier to install and download.",
+          "It currently serves software through tools such as apt, dnf/yum, apk, xbps, pacman, Maven, Gradle, and winget manifests. Supported ecosystems may be added or removed over time.",
+          "Packages in this repository are TamKungZ_'s own software. It is not a mirror of other developers' projects."
+        ]
+      },
+      {
+        "heading": "Permitted use",
+        "paragraphs": [
+          "You may use this repository with supported package managers and build tools to download, install, update, build, test, or run packages published here, within the license of each package.",
+          "You may browse the website and follow its installation instructions for personal, educational, or commercial use, as long as you comply with these terms and the license of the package concerned."
+        ]
+      },
+      {
+        "heading": "Acceptable use",
+        "paragraphs": [
+          "Do not use this repository for abusive scraping, excessive automated requests, or any activity that disrupts normal package downloads and package-manager access for other users.",
+          "Do not attempt to gain unauthorized access to the repository, its hosting, or its build pipeline, and do not upload, inject, or tamper with packages, metadata, or signing keys.",
+          "Do not use the repository to distribute malware, or to misrepresent altered packages as official TamKungZ_ releases.",
+          "Access may be rate-limited or blocked, without notice, when it appears to violate these rules or to put the service at risk."
+        ]
+      },
+      {
+        "heading": "Package submissions",
+        "paragraphs": [
+          "Packages are added only through TamKungZ_'s own automated publishing pipeline from TamKungZ_'s projects. Packages are not accepted through pull requests, issues, or email.",
+          "Outside contributions are welcome only for the website code, through the repository's normal contribution process."
         ]
       },
       {
         "heading": "Mirrors",
         "paragraphs": [
-          "Mirroring is allowed for official distribution repositories and established community package repositories, such as repositories maintained by Ubuntu or other Linux distribution communities.",
+          "Mirroring is allowed for official distribution repositories and established community package repositories, such as repositories maintained by Ubuntu or other Linux distribution communities, when the license of the package concerned permits it.",
           "Do not create or publish unofficial personal mirrors, PPAs, Launchpad repositories, or independently hosted copies of this repository without permission.",
-          "A mirror must not be presented as an official TamKungZ_ repository unless it is maintained or approved by TamKungZ_."
+          "A mirror must not be presented as an official TamKungZ_ repository unless it is maintained or approved by TamKungZ_.",
+          "To ask for permission to mirror, contact dev@tamkungz.me and describe who will operate the mirror and how it will be kept in sync."
         ]
       },
       {
-        "heading": "Repository use",
+        "heading": "Signing keys and verification",
         "paragraphs": [
-          "Do not use this repository for abusive scraping, excessive automated requests, or other activity that disrupts normal package downloads and package-manager access."
+          "Repository metadata for APT, RPM, and pacman is signed with the TamKungZ_ GPG key, published at https://packages.tamkungz.me/gpg.key. Please check the key fingerprint shown on the website before you trust the key.",
+          "Signing keys may be rotated for security or maintenance reasons. When that happens, you may need to re-import the key by following the instructions on the website.",
+          "You are responsible for deciding whether to trust the key on your own systems. Do not trust keys, packages, or repositories that are not served from packages.tamkungz.me or an approved mirror."
         ]
       },
       {
-        "heading": "Availability",
+        "heading": "Availability and changes",
         "paragraphs": [
-          "This repository is provided as-is without uptime, compatibility, support, or warranty guarantees.",
-          "Packages, metadata, repository paths, and signing keys may change when needed for maintenance, security, or releases."
+          "This repository is provided as-is, without guarantees of uptime, compatibility, or support.",
+          "Packages, versions, metadata, repository paths, and signing keys may be changed, moved, or removed at any time for maintenance, security, or release reasons. Old versions are not guaranteed to remain available, so do not rely on a specific file or URL staying in place forever.",
+          "These terms may be updated from time to time. The updated version applies from the moment it is published on this page, and continued use of the repository means you accept it."
         ]
       },
       {
-        "heading": "Contact",
+        "heading": "Disclaimer of warranty",
         "paragraphs": [
-          "For mirror requests, takedown requests, permissions, or repository issues, contact dev@tamkungz.me."
+          "To the maximum extent permitted by law, the repository, website, and all packages are provided as is and as available, without warranties of any kind, whether express or implied. This includes warranties of merchantability, fitness for a particular purpose, and non-infringement.",
+          "Software can contain bugs. You are responsible for testing packages before using them in production or in any critical environment."
+        ]
+      },
+      {
+        "heading": "Limitation of liability",
+        "paragraphs": [
+          "To the maximum extent permitted by law, TamKungZ_ is not liable for any direct, indirect, incidental, or consequential damages, including data loss, system damage, or business interruption, that result from using or being unable to use this repository or any package from it.",
+          "Nothing in these terms excludes liability that cannot be excluded under applicable law."
+        ]
+      },
+      {
+        "heading": "Third-party services and links",
+        "paragraphs": [
+          "The website may link to, or depend on, third-party services such as GitHub, hosting or CDN providers, and analytics tools. TamKungZ_ does not control these services and is not responsible for their content or practices."
+        ]
+      },
+      {
+        "heading": "Security issues, takedowns, and contact",
+        "paragraphs": [
+          "To report a security issue, please email dev@tamkungz.me directly rather than opening a public issue.",
+          "For mirror requests, takedown requests, permissions, or other repository issues, contact dev@tamkungz.me.",
+          "For a bug in a specific package, you can also report it in that project's own repository."
         ]
       }
     ]
@@ -43,27 +100,80 @@
   {
     "slug": "privacy",
     "title": "Privacy Policy",
-    "description": "Privacy notes for visitors and package-manager clients using TamKungZ_ Packages.",
+    "description": "What data is collected when you visit TamKungZ_ Packages or use it with a package manager, and how it is used.",
     "sections": [
       {
-        "heading": "Data collected",
+        "heading": "Overview",
         "paragraphs": [
-          "This site does not provide user accounts, comments, or payment forms.",
-          "Normal web server, CDN, hosting, and security logs may record request metadata such as IP address, user agent, requested URL, referrer, status code, and timestamp."
+          "This policy explains what information is processed when you visit packages.tamkungz.me or when a package manager or other client requests files from it.",
+          "TamKungZ_ Packages is a simple package repository. It does not ask you to create an account or give personal information in order to download packages."
+        ]
+      },
+      {
+        "heading": "Data we do not collect directly",
+        "paragraphs": [
+          "This site does not provide user accounts, comments, newsletters, contact forms, or payment forms, so it does not directly collect names, passwords, or payment details.",
+          "If you email dev@tamkungz.me, the address you write from and the content of your message are received and used only to respond to you."
+        ]
+      },
+      {
+        "heading": "Data collected automatically",
+        "paragraphs": [
+          "Normal web server, CDN, hosting, and security logs may record request metadata such as IP address, user agent, requested URL, referrer, status code, and timestamp.",
+          "Package managers and automated clients (for example apt, dnf, apk, xbps, pacman, Maven, Gradle, and winget) also leave these records when they request repository metadata or package files. The user agent usually shows which tool and version made the request."
         ]
       },
       {
         "heading": "Analytics",
         "paragraphs": [
-          "Generated package index pages include the Ahrefs analytics script to understand aggregate site traffic.",
-          "Package managers and automated clients may also appear in server or analytics logs when they request repository metadata or artifacts."
+          "Generated package index pages include the Ahrefs analytics script, which is used to understand aggregate website traffic, such as how many people visit and which pages are viewed.",
+          "Analytics are loaded on website pages. Package-manager downloads do not run the analytics script, but they may still appear in server or hosting logs as described above.",
+          "Data processed by Ahrefs is handled under Ahrefs' own privacy policy."
         ]
       },
       {
-        "heading": "Use of data",
+        "heading": "How data is used",
         "paragraphs": [
-          "Operational data is used to maintain the repository, investigate abuse, debug availability problems, and understand aggregate usage.",
-          "This site does not intentionally sell personal information."
+          "Operational data is used to run and maintain the repository, keep it secure, investigate abuse, debug availability problems, and understand aggregate usage.",
+          "This site does not intentionally sell personal information, and it does not use it for advertising or for building profiles of individual visitors."
+        ]
+      },
+      {
+        "heading": "Sharing and service providers",
+        "paragraphs": [
+          "Data may be processed by the infrastructure providers that serve the site, such as hosting, CDN, and build providers, and by the analytics provider named above. They process it only to provide their services.",
+          "Information may be disclosed if required by law, or when needed to protect the repository, its users, or others from abuse or security threats."
+        ]
+      },
+      {
+        "heading": "Retention",
+        "paragraphs": [
+          "Logs are kept only as long as needed for security, troubleshooting, and operations, according to the retention settings of the infrastructure providers in use. Retention periods may differ between providers."
+        ]
+      },
+      {
+        "heading": "Security",
+        "paragraphs": [
+          "Reasonable measures are used to protect the repository and its data, including signed repository metadata and an automated, publicly visible build process. No online service can guarantee perfect security."
+        ]
+      },
+      {
+        "heading": "Children",
+        "paragraphs": [
+          "This repository is intended for developers and system administrators and is not directed at children. It does not knowingly collect personal information from children."
+        ]
+      },
+      {
+        "heading": "Your choices and rights",
+        "paragraphs": [
+          "Depending on where you live, you may have rights over your personal data, such as the right to ask about, correct, or delete it. You can also block the analytics script with your browser settings or a content blocker without losing access to packages.",
+          "Because logs are not tied to accounts, we may not always be able to identify which records relate to you, but we will do our best to handle reasonable requests."
+        ]
+      },
+      {
+        "heading": "Changes to this policy",
+        "paragraphs": [
+          "This policy may be updated when the site or its providers change. The latest version is always the one published on this page."
         ]
       },
       {
@@ -77,21 +187,41 @@
   {
     "slug": "license",
     "title": "License and Artifact Use",
-    "description": "License information for this repository and the projects published through it.",
+    "description": "License information for this repository, the projects published through it, and the website itself.",
     "sections": [
+      {
+        "heading": "About this page",
+        "paragraphs": [
+          "This page explains who owns what in TamKungZ_ Packages and under which licenses you may use it. It matches the LICENSE file in the repository source.",
+          "Rules for how you may use the service (for example abuse limits and availability) are in the Terms of Use."
+        ]
+      },
       {
         "heading": "Repository",
         "paragraphs": [
-          "TamKungZ_ Packages is a package hosting repository. It provides packages, release files, repository metadata, and related files for download and installation.",
+          "TamKungZ_ Packages is a package hosting repository. It provides packages, release files, repository metadata, and related files for download and installation through tools such as apt, dnf, apk, xbps, pacman, Maven, Gradle, and winget.",
           "The repository itself does not determine the license of the projects or packages published through it."
         ]
       },
       {
         "heading": "Project licenses",
         "paragraphs": [
-          "Projects and packages published here may have their own licenses.",
-          "The license provided by each project applies to that project's source code, binaries, packages, and other artifacts as specified by that license.",
+          "Projects and packages published here may have their own licenses. You can find a package's license in its project repository, documentation, or package metadata, such as a POM file, spec file, or control file.",
+          "The license provided by each project applies to that project's source code, binaries, packages, and other artifacts, as specified by that license.",
           "Publishing a project through TamKungZ_ Packages does not replace or change the project's own license."
+        ]
+      },
+      {
+        "heading": "Packages without a stated license",
+        "paragraphs": [
+          "If a package does not state a license of its own, for example in its metadata, documentation, or project page, all rights in it are reserved by its author.",
+          "In that case, downloading a package does not give you the right to copy, modify, redistribute, or build on it beyond what is needed to install and run it. Contact dev@tamkungz.me if you need clarification or permission."
+        ]
+      },
+      {
+        "heading": "Downloading and use",
+        "paragraphs": [
+          "You may download artifacts from this repository with package managers and dependency managers to install, build, test, or run software, within the license of the package concerned."
         ]
       },
       {
@@ -99,7 +229,27 @@
         "paragraphs": [
           "Official distribution repositories and established community package repositories may mirror packages from this repository when permitted by the applicable project license.",
           "Do not create unofficial personal mirrors, PPAs, Launchpad repositories, or independently hosted copies of this repository without permission.",
-          "Mirroring does not transfer ownership of the packages, projects, repository metadata, names, or branding."
+          "Mirroring does not transfer ownership of the packages, projects, repository metadata, names, or branding.",
+          "More details and the process for requesting permission are in the Terms of Use."
+        ]
+      },
+      {
+        "heading": "Website, metadata, names, and branding",
+        "paragraphs": [
+          "The website, repository metadata, and the names and branding of TamKungZ_ Packages and TamKungZ_ are Copyright (c) 2026 TamKungZ_. All rights reserved.",
+          "You may not use the TamKungZ_ name or branding in a way that suggests your service, mirror, or software is official or endorsed without permission."
+        ]
+      },
+      {
+        "heading": "Third-party components",
+        "paragraphs": [
+          "Packages may depend on or bundle third-party software that is under its own license. Those licenses continue to apply to that software, and it is your responsibility to follow them."
+        ]
+      },
+      {
+        "heading": "Contact",
+        "paragraphs": [
+          "For licensing questions, permissions, or mirror requests, contact dev@tamkungz.me."
         ]
       }
     ]
