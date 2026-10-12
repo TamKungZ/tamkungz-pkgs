@@ -44,6 +44,13 @@ export function hasSection(name: string): boolean {
   return fs.existsSync(path.join(PACKAGES_DIR, name));
 }
 
+/** Generated repository metadata folders should remain accessible to package managers, but not
+ * appear as HTML listing pages (which otherwise create dead links in crawlers / scanners).
+ */
+export function isGeneratedListingDir(name: string): boolean {
+  return name === "repodata" || name === "dists";
+}
+
 function isDirectory(full: string): boolean {
   try {
     return fs.statSync(full).isDirectory();
@@ -66,6 +73,7 @@ export function listEntries(segments: readonly string[]): Entry[] {
     const isDir = isDirectory(full);
 
     if (isDir) {
+      if (isGeneratedListingDir(name)) continue;
       // Only known repository folders are listed on the home page.
       if (atRoot && !(PROJECT_ROOTS as readonly string[]).includes(name)) continue;
     } else if (section === "maven" && !isMavenFile(name)) {
@@ -91,6 +99,7 @@ export function listDirectories(): string[][] {
   const visit = (segments: string[]) => {
     for (const name of fs.readdirSync(dirOf(segments)).sort()) {
       if (isSkipped(name)) continue;
+      if (isGeneratedListingDir(name)) continue;
       if (segments.length === 0 && !(PROJECT_ROOTS as readonly string[]).includes(name)) continue;
       if (!isDirectory(path.join(dirOf(segments), name))) continue;
 
