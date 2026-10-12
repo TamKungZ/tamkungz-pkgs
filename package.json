@@ -26,5 +26,8 @@
     "migrate": "tsx tools/migrate-legacy.ts",
     "repo:metadata": "tsx tools/repo-metadata.ts",
     "check:source": "tsx tools/check-source.ts"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }
