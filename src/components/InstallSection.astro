@@ -5,22 +5,33 @@ interface Props {
   blocks: UsageBlock[];
 }
 const { blocks } = Astro.props;
-
-const BADGE: Record<string, string> = { bash: "#03983d", groovy: "#7a5b12", ini: "#245b91" };
 ---
 
-<section class="install" aria-label="Install examples">
-  <div class="install-title">Install</div>
+<section class="install" aria-label="Install examples" data-install>
+  <div class="install-head">
+    <h2>Install</h2>
+    {
+      blocks.length > 1 && (
+        <div class="tabs" role="tablist" aria-label="Choose your system">
+          {blocks.map((block, i) => (
+            <button class="tab" type="button" role="tab" id={`tab-${i}`} aria-controls={`panel-${i}`} aria-selected={i === 0}>
+              {block.label}
+            </button>
+          ))}
+        </div>
+      )
+    }
+  </div>
   <div class="install-body">
     {
-      blocks.map((block) => (
-        <div class="code-block">
+      blocks.map((block, i) => (
+        <div class="code-block" role={blocks.length > 1 ? "tabpanel" : undefined} id={`panel-${i}`} aria-labelledby={`tab-${i}`}>
           <div class="code-head">
             <div class="code-title">
-              <span class="code-lang" style={`color: ${BADGE[block.lang] ?? "#5f6d5f"};`}>{block.lang}</span>
-              <span>{block.label}</span>
+              <span class="code-lang">{block.lang}</span>
+              <span class="code-label">{block.label}</span>
             </div>
-            <button class="copy-btn" type="button">copy</button>
+            <button class="btn copy-btn" type="button">Copy</button>
           </div>
           <pre><code class={`language-${block.lang}`}>{block.code}</code></pre>
         </div>
@@ -30,22 +41,49 @@ const BADGE: Record<string, string> = { bash: "#03983d", groovy: "#7a5b12", ini:
 </section>
 
 <script>
-  document.addEventListener("click", async (event) => {
+  const root = document.querySelector<HTMLElement>("[data-install]");
+  const tabs = [...(root?.querySelectorAll<HTMLButtonElement>(".tab") ?? [])];
+  const panels = [...(root?.querySelectorAll<HTMLElement>(".code-block") ?? [])];
+  const KEY = "pkg-install-tab";
+
+  function select(i: number, focus = false) {
+    tabs.forEach((t, n) => {
+      t.setAttribute("aria-selected", String(n === i));
+      t.tabIndex = n === i ? 0 : -1;
+    });
+    panels.forEach((p, n) => (p.hidden = n !== i));
+    if (focus) tabs[i].focus();
+    try { localStorage.setItem(KEY, tabs[i].textContent ?? ""); } catch {}
+  }
+
+  if (root && tabs.length > 1) {
+    root.setAttribute("data-ready", "");
+    let start = 0;
+    try { start = Math.max(0, tabs.findIndex((t) => t.textContent === localStorage.getItem(KEY))); } catch {}
+    select(start);
+    tabs.forEach((t, i) => t.addEventListener("click", () => select(i)));
+    root.querySelector(".tabs")!.addEventListener("keydown", (e) => {
+      const k = (e as KeyboardEvent).key;
+      const cur = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true");
+      if (k === "ArrowRight") select((cur + 1) % tabs.length, true);
+      if (k === "ArrowLeft") select((cur - 1 + tabs.length) % tabs.length, true);
+    });
+  }
+
+  root?.addEventListener("click", async (event) => {
     const btn = (event.target as HTMLElement).closest<HTMLButtonElement>(".copy-btn");
     const code = btn?.closest(".code-block")?.querySelector("code");
     if (!btn || !code) return;
-
-    const original = btn.textContent;
     try {
       await navigator.clipboard.writeText(code.textContent ?? "");
-      btn.textContent = "copied";
-      btn.classList.add("copied");
+      btn.textContent = "Copied";
+      btn.classList.add("done");
     } catch {
-      btn.textContent = "failed";
+      btn.textContent = "Failed";
     }
     setTimeout(() => {
-      btn.textContent = original;
-      btn.classList.remove("copied");
+      btn.textContent = "Copy";
+      btn.classList.remove("done");
     }, 1400);
   });
 </script>
