@@ -117,6 +117,33 @@ h1.mono { font-size: 22px; letter-spacing: 0; word-break: break-all; }
 .install[data-ready] .install-head { padding-bottom: 0; }
 .install[data-ready] .code-label { display: none; }
 
+.available-apps {
+  margin-bottom: 20px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.available-apps-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; border-bottom: 1px solid var(--line);
+}
+.available-apps-head h2 { margin: 0; font-size: 15px; }
+.available-apps-head > span { color: var(--muted); font-size: 13px; }
+.available-apps-list { margin: 0; padding: 0; list-style: none; }
+.available-app { display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 8px 14px; }
+.available-app + .available-app { border-top: 1px solid var(--line-soft); }
+.available-app-name { font-weight: 600; }
+.available-app > code {
+  min-width: 0; overflow: hidden; color: var(--muted); font-family: var(--mono);
+  font-size: 12px; text-overflow: ellipsis; white-space: nowrap;
+}
+.available-app-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.source-link { display: inline-flex; color: var(--muted); }
+.source-link:hover { color: var(--accent-text); }
+.source-link svg { width: 18px; height: 18px; }
+.copy-app { white-space: nowrap; }
+
 .code-block { border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; background: var(--surface-2); }
 .code-block[hidden] { display: none; }
 .code-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 10px; border-bottom: 1px solid var(--line); }
@@ -200,4 +227,8 @@ footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13px
   th.type, td.type { display: none; }
   th, td { padding: 8px; }
   .copy-link { opacity: 1; }
+  .available-app { flex-wrap: wrap; gap: 6px 10px; }
+  .available-app-name { flex: 1 1 auto; }
+  .available-app > code { order: 1; flex: 1 0 100%; }
+  .available-app-actions { margin-left: auto; }
 }

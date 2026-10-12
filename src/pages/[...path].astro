@@ -1,8 +1,10 @@
 ---
 import type { InferGetStaticPropsType } from "astro";
+import AvailableApps from "../components/AvailableApps.astro";
 import FileTable from "../components/FileTable.astro";
 import InstallSection from "../components/InstallSection.astro";
 import Base from "../layouts/Base.astro";
+import { listAvailableApps } from "../lib/available-apps";
 import { getPageMeta, getRows } from "../lib/listing";
 import { listDirectories } from "../lib/tree";
 
@@ -19,11 +21,13 @@ const { segments } = Astro.props;
 
 const meta = getPageMeta(segments);
 const rows = getRows(segments);
+const availableApps = segments.length === 1 ? listAvailableApps(segments[0]) : [];
 // No "../" on the home page, nor on /maven/ (same as the original generator).
 const showParent = segments.length > (segments[0] === "maven" ? 1 : 0);
 ---
 
 <Base title={meta.title} description={meta.description} pathText={meta.pathText} siteName={meta.siteName}>
   {meta.usage && <InstallSection blocks={meta.usage} />}
+  <AvailableApps apps={availableApps} />
   <FileTable rows={rows} showParent={showParent} />
 </Base>
