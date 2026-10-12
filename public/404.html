@@ -9,132 +9,99 @@
   <meta name="googlebot" content="noindex, nofollow">
   <meta name="description" content="404 - The requested package or artifact was not found on TamKungZ_ Packages.">
   <meta name="theme-color" content="#03983d">
-  <link rel="canonical" href="https://packages.tamkungz.me/">
+  <meta name="color-scheme" content="light dark">
 
   <!-- Open Graph -->
   <meta property="og:title" content="404 - TamKungZ_ Packages">
   <meta property="og:description" content="The requested package or artifact was not found.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://packages.tamkungz.me/">
 
   <title>404 - TamKungZ_ Packages</title>
 
+  <!-- Absolute path: this page is served from any missing URL, so relative paths would break -->
+  <link rel="stylesheet" href="/resources/css/global.css">
+
   <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-main: #1f2937;
-      --text-muted: #4b5563;
-      --accent: #03983d;
-      --accent-softer: #35ad64;
-      --code-bg: #f3f4f6;
-      --border: #e5e7eb;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      line-height: 1.6;
-      padding: 24px;
-    }
-    main {
-      max-width: 480px;
-      width: 100%;
-      padding: 40px 24px;
-    }
+    /* 404-only layout; colors all come from the shared tokens in global.css */
+    body { display: flex; flex-direction: column; }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
+    .error-page { max-width: 480px; margin-inline: auto; text-align: center; }
     .error-icon {
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 8px;
+      width: 180px; height: 180px; margin: 0 auto 8px;
       background-color: var(--accent);
-      -webkit-mask-image: url('/resources/svg/error-404.svg');
-      mask-image: url('/resources/svg/error-404.svg');
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-      -webkit-mask-position: center;
-      mask-position: center;
-      -webkit-mask-size: contain;
-      mask-size: contain;
+      -webkit-mask: url('/resources/svg/error-404.svg') center / contain no-repeat;
+      mask: url('/resources/svg/error-404.svg') center / contain no-repeat;
     }
-    h1 {
-      font-size: 5.5rem;
-      margin: 0 0 12px 0;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      color: var(--accent);
-      line-height: 1;
+    .error-code {
+      margin: 0 0 8px; font-size: 5rem; font-weight: 800; line-height: 1;
+      letter-spacing: -0.04em; color: var(--accent-text);
     }
-    p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      margin: 0 0 24px 0;
+    .error-page .lead { margin: 0 auto 20px; }
+    .error-path {
+      display: inline-block; max-width: 100%; margin-bottom: 24px; padding: 8px 14px;
+      background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+      font-family: var(--mono); font-size: 13px; color: var(--muted); word-break: break-all;
     }
-    .code-block {
-      background: var(--code-bg);
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      display: inline-block;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      margin-bottom: 32px;
-      word-break: break-all;
+    .error-path[hidden] { display: none; }
+    .btn-primary {
+      display: inline-block; padding: 10px 24px;
+      background: var(--accent); color: #fff; font-weight: 600;
+      border-radius: var(--radius-sm);
     }
-    code {
-      font-family: inherit;
-    }
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .action-btn {
-      display: inline-block;
-      padding: 12px 28px;
-      background-color: var(--accent);
-      color: #ffffff;
-      border-radius: 6px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: background-color 0.15s ease, transform 0.1s ease;
-      box-shadow: 0 2px 4px rgba(3, 152, 61, 0.15);
-    }
-    .action-btn:hover {
-      background-color: #027a31;
-      text-decoration: none;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px rgba(3, 152, 61, 0.2);
-    }
-    .action-btn:active {
-      transform: translateY(0);
-    }
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; text-decoration: none; }
   </style>
 </head>
 <body>
-<main>
-  <div class="error-icon" aria-hidden="true"></div>
-  <h1>404</h1>
-  <p>The requested package or artifact was not found.</p>
+  <a class="skip" href="#main">Skip to content</a>
 
-  <div class="code-block">
-    Repository root: <a href="https://packages.tamkungz.me/"><code>https://packages.tamkungz.me/</code></a>
-  </div>
+  <header class="topbar">
+    <div class="wrap topbar-in">
+      <a class="brand" href="/"><span>TamKungZ_ Packages</span></a>
+      <nav class="nav" aria-label="Main">
+        <a href="/">Packages</a>
+        <a href="/terms/">Terms</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/license/">License</a>
+      </nav>
+      <a class="nav-ext" href="https://github.com/TamKungZ" rel="noopener">GitHub</a>
+    </div>
+  </header>
 
-  <div>
-    <a href="https://packages.tamkungz.me/" class="action-btn">Return to Packages</a>
-  </div>
-</main>
+  <main id="main" class="wrap">
+    <div class="error-page">
+      <div class="error-icon" aria-hidden="true"></div>
+      <h1 class="error-code">404</h1>
+      <p class="lead">The requested package or artifact was not found.</p>
+
+      <div id="error-path" class="error-path" hidden></div>
+
+      <div>
+        <a href="/" class="btn-primary">Return to Packages</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap footer-in">
+      <span>&copy; 2026 TamKungZ_</span>
+      <div class="footer-links">
+        <a href="/terms/">Terms</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/license/">License</a>
+        <a href="mailto:dev@tamkungz.me">dev@tamkungz.me</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Show the path that was not found (textContent only, so it is safe).
+    (function () {
+      var el = document.getElementById('error-path');
+      if (el && location.pathname && location.pathname !== '/') {
+        el.textContent = location.pathname;
+        el.hidden = false;
+      }
+    })();
+  </script>
 </body>
 </html>
