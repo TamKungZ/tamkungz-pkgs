@@ -169,6 +169,12 @@ h1.mono { font-size: 22px; letter-spacing: 0; word-break: break-all; }
 }
 .code-block pre { margin: 0; padding: 12px; overflow: auto; max-height: 300px; }
 .code-block code { font-family: var(--mono); font-size: 13px; line-height: 1.6; white-space: pre; }
+.code-output .shiki { color: var(--shiki-light); background-color: var(--surface-2) !important; }
+.code-output .shiki span { color: var(--shiki-light); }
+@media (prefers-color-scheme: dark) {
+  .code-output .shiki { color: var(--shiki-dark); }
+  .code-output .shiki span { color: var(--shiki-dark); }
+}
 
 .btn {
   font: inherit; font-size: 13px; cursor: pointer; flex: none;

@@ -1,10 +1,14 @@
 ---
 import type { UsageBlock } from "../config/install";
+import { highlightCode } from "../lib/highlight";
 
 interface Props {
   blocks: UsageBlock[];
 }
 const { blocks } = Astro.props;
+const highlightedBlocks = await Promise.all(
+  blocks.map((block) => highlightCode(block.code, block.lang)),
+);
 ---
 
 <section class="install" aria-label="Install examples" data-install>
@@ -33,7 +37,7 @@ const { blocks } = Astro.props;
             </div>
             <button class="btn copy-btn" type="button">Copy</button>
           </div>
-          <pre><code class={`language-${block.lang}`}>{block.code}</code></pre>
+          <div class="code-output" set:html={highlightedBlocks[i]} />
         </div>
       ))
     }

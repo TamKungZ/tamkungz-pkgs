@@ -1,5 +1,6 @@
 ---
 import type { MavenArtifact } from "../lib/maven-catalog";
+import { highlightCode } from "../lib/highlight";
 
 interface Props {
   artifacts: MavenArtifact[];
@@ -9,6 +10,17 @@ interface Props {
 const { artifacts, repoUrl } = Astro.props;
 const selected = artifacts[0];
 const dependency = selected ? `${selected.groupId}:${selected.artifactId}:${selected.version}` : "";
+const snippet = `repositories {
+    maven {
+        name = "TamKungZ Maven"
+        url = uri("${repoUrl}")
+    }
+}
+
+dependencies {
+    implementation("${dependency}")
+}`;
+const highlightedSnippet = selected ? await highlightCode(snippet, "gradle") : "";
 ---
 
 {
@@ -44,21 +56,17 @@ const dependency = selected ? `${selected.groupId}:${selected.artifactId}:${sele
       <div class="code-block">
         <div class="code-head">
           <div class="code-title">
-            <span class="code-lang">groovy</span>
+            <span class="code-lang">gradle</span>
             <span class="code-label">Gradle dependency</span>
           </div>
           <button class="btn maven-copy" type="button">Copy</button>
         </div>
-        <pre><code class="language-groovy" data-repo-url={repoUrl}>{`repositories {
-    maven {
-        name = "TamKungZ Maven"
-        url = uri("${repoUrl}")
-    }
-}
-
-dependencies {
-    implementation("${dependency}")
-}`}</code></pre>
+        <div
+          class="code-output"
+          data-repo-url={repoUrl}
+          data-dependency={dependency}
+          set:html={highlightedSnippet}
+        />
       </div>
     </section>
   )
@@ -68,14 +76,28 @@ dependencies {
   document.querySelectorAll<HTMLElement>(".maven-install").forEach((root) => {
     const select = root.querySelector<HTMLSelectElement>("#maven-artifact");
     const code = root.querySelector<HTMLElement>(".code-block code");
+    let currentDependency = root.querySelector<HTMLElement>(".code-output")?.dataset.dependency ?? "";
     const source = root.querySelector<HTMLAnchorElement>(".maven-source");
     const button = root.querySelector<HTMLButtonElement>(".maven-copy");
 
     select?.addEventListener("change", () => {
       const option = select.selectedOptions[0];
-      const repoUrl = code?.dataset.repoUrl;
+      const repoUrl = root.querySelector<HTMLElement>(".code-output")?.dataset.repoUrl;
       if (!code || !repoUrl) return;
-      code.textContent = `repositories {\n    maven {\n        name = "TamKungZ Maven"\n        url = uri("${repoUrl}")\n    }\n}\n\ndependencies {\n    implementation("${option.value}")\n}`;
+      const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      let updated = false;
+      while (node) {
+        if (node.nodeValue?.includes(currentDependency)) {
+          node.nodeValue = node.nodeValue.replace(currentDependency, option.value);
+          updated = true;
+          break;
+        }
+        node = walker.nextNode();
+      }
+      if (!updated) throw new Error("Unable to update the highlighted Maven dependency.");
+      currentDependency = option.value;
+      root.querySelector<HTMLElement>(".code-output")!.dataset.dependency = currentDependency;
       if (source) {
         const sourceUrl = option.dataset.source;
         source.hidden = !sourceUrl;

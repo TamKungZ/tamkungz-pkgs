@@ -1,9 +1,11 @@
 /** "How to install" snippets shown on the home page and the Maven pages. */
 
+export type CodeLanguage = "bash" | "gradle" | "groovy" | "powershell" | "ini";
+
 export interface UsageBlock {
   label: string;
   /** Shown as a badge; also used as the code's language class. */
-  lang: "bash" | "groovy" | "powershell" | "ini";
+  lang: CodeLanguage;
   code: string;
 }
 
@@ -91,7 +93,7 @@ sudo pacman -S ${pkg}`,
 export function maven(repoUrl: string, name = "TamKungZ Packages"): UsageBlock {
   return {
     label: "Maven / Gradle",
-    lang: "groovy",
+    lang: "gradle",
     code: `repositories {
     maven {
         name = "${name}"
