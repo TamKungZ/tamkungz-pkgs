@@ -1,0 +1,136 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz.nilloadersdk",
+    "module": "nilloadersdk",
+    "version": "1.0.3",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.8"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "nilloadersdk-1.0.3.jar",
+          "url": "nilloadersdk-1.0.3.jar",
+          "size": 245778,
+          "sha512": "85ef8f47567579590f8d31a436ae57bf1f1446c9faa190df1aa421949e623815d1527c412992ca258eb879d2720a7d0e47817fc0516ef700a82901c822bd3d8d",
+          "sha256": "322af57f4bb6a75425bea776b335c5c6bc726ca3582cd79eb128d2f5d76f379e",
+          "sha1": "154871c5e6581ab0e386a05adb3d6edca3cb5913",
+          "md5": "54b0443f6a3356c2a75bcd5aff7d3dc4"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.ow2.asm",
+          "module": "asm",
+          "version": {
+            "requires": "9.5"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-tree",
+          "version": {
+            "requires": "9.5"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "nilloadersdk-1.0.3.jar",
+          "url": "nilloadersdk-1.0.3.jar",
+          "size": 245778,
+          "sha512": "85ef8f47567579590f8d31a436ae57bf1f1446c9faa190df1aa421949e623815d1527c412992ca258eb879d2720a7d0e47817fc0516ef700a82901c822bd3d8d",
+          "sha256": "322af57f4bb6a75425bea776b335c5c6bc726ca3582cd79eb128d2f5d76f379e",
+          "sha1": "154871c5e6581ab0e386a05adb3d6edca3cb5913",
+          "md5": "54b0443f6a3356c2a75bcd5aff7d3dc4"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilloadersdk-1.0.3-all.jar",
+          "url": "nilloadersdk-1.0.3-all.jar",
+          "size": 417688,
+          "sha512": "b4476099795df856e30b8882f478be5a7c80172c946e6e6a5b727e46c8e3fdb67ecf588d15fdf2268230fb9640be933da12262bf70c94ac11f7b710cb5b41d9f",
+          "sha256": "bf2e021ca0012ea23e0d032d751e54e0e35a16031cbe615670cf7381d3a8ea86",
+          "sha1": "14e03c5934c83838886a636dea1e0546f75a5e72",
+          "md5": "ed586e500b94a998c0e3a6b24d33b5da"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilloadersdk-1.0.3-sources.jar",
+          "url": "nilloadersdk-1.0.3-sources.jar",
+          "size": 203276,
+          "sha512": "9e5132adb84248cde90d1b3038866e9d3853075f2b85dc7f971716eb885d35754907245bca8af55090d8211ab163378bd4a343e67efd4152aafd772fec6470af",
+          "sha256": "b2132d3dfcbf19c7b07830f0a4af4796dadbd39441586b5450a908f23c82b0cc",
+          "sha1": "e6058899655c2a700ee5cd47a3ddecda52ad84c0",
+          "md5": "28def04cfd9f9ada22a53048c652717a"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilloadersdk-1.0.3-javadoc.jar",
+          "url": "nilloadersdk-1.0.3-javadoc.jar",
+          "size": 179871,
+          "sha512": "0de97d077751b171a64b5db9ebad73388ccb64f968f834e7fcde8840abf1e02d023ab76b8fd257ef71372f694df4743f21a2c053524babdc22ba10c42f2ec146",
+          "sha256": "b110dfba50e0c6229f5746dc222db3bd557ccf31f10217e6cb9f568857cffcf0",
+          "sha1": "1e8992990d756743ac032d86d91a03a2e11cd9a6",
+          "md5": "da4129bde9e6be5bafb9550a339143e8"
+        }
+      ]
+    }
+  ]
+}

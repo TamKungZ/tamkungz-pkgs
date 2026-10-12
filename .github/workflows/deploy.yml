@@ -1,0 +1,86 @@
+name: Deploy
+
+# Builds signed repository metadata + the website from packages/, then publishes to GitHub Pages.
+# Nothing generated is committed. Runs on every push to main, by hand, and from publish.yml.
+#
+# Needs these repository secrets (Settings > Secrets and variables > Actions):
+#   GPG_PRIVATE_LINUX   armored private key that signs APT / RPM / pacman metadata
+#   GPG_PASSPHRASE      its passphrase (leave unset if the key has none)
+#
+# Pages source must be "GitHub Actions" (Settings > Pages > Build and deployment).
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - "examples/**"
+      - ".github/workflows/ci.yml"
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Commit to build (publish.yml passes the commit it just pushed)
+        type: string
+        required: false
+
+# Never two deployments at once, never cancel one half-way.
+# (publish.yml uses a different group on purpose: a reusable workflow in the caller's group deadlocks.)
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install repository tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            apt-utils dpkg-dev createrepo-c pacman-package-manager libarchive-tools gnupg
+
+      - run: npm ci
+
+      # The only step that sees the signing key. Third-party code never runs here:
+      # npm dependencies are installed above, from the lockfile, before any secret exists.
+      - name: Build signed repository metadata
+        env:
+          GPG_PRIVATE_LINUX: ${{ secrets.GPG_PRIVATE_LINUX }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: npm run repo:metadata
+
+      - name: Build site
+        env:
+          PACKAGES_DIR: build/stage
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

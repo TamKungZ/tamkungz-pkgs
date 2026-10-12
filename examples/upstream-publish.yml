@@ -1,0 +1,72 @@
+# Copy this into an upstream project as .github/workflows/release.yml.
+#
+# What it does: build -> attach the files to a GitHub release -> tell the packages site.
+# The packages site then sorts the files into its repositories BY FILE TYPE, signs the
+# metadata with its own key and deploys. Nothing here knows the site's folder layout and
+# no signing key leaves the packages repo.
+#
+# Files recognised on the release (anything else is ignored):
+#   *.deb  *.rpm  *.apk  *.xbps  *.pkg.tar.zst    + their .asc/.sig files
+#   maven-repo.zip         zip of the Maven repo your build produced (build/maven-repo/*)
+#   winget-manifests.zip   zip of <PackageId>/<version>/*.yaml
+#
+# One-time setup in the upstream repo:
+#   secret PACKAGES_DISPATCH_TOKEN = fine-grained PAT, repository access limited to the
+#   packages repo, permission "Actions: Read and write" and nothing else.
+#   (That token can start a publish run; it cannot push code or read secrets.)
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+env:
+  PACKAGES_REPO: TamKungZ/packages.tamkungz.me
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes
+
+  build:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [x86_64, aarch64] # one job per architecture; each uploads its own files
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build
+        run: |
+          mkdir -p dist
+          # Replace with the real build for ${{ matrix.target }}. Put the results in dist/, e.g.
+          #   ./build-packages.sh ${{ matrix.target }}          -> dist/*.deb dist/*.rpm ...
+          #   ./gradlew publish && (cd build/maven-repo && zip -qr ../../dist/maven-repo.zip .)
+          echo "build for ${{ matrix.target }}"
+
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --clobber
+
+  publish-to-packages:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask the packages site to publish this release
+        env:
+          GH_TOKEN: ${{ secrets.PACKAGES_DISPATCH_TOKEN }}
+        run: |
+          gh workflow run publish.yml --repo "$PACKAGES_REPO" \
+            -f source="$GITHUB_REPOSITORY" -f tag="$GITHUB_REF_NAME"

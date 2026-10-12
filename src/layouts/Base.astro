@@ -1,0 +1,84 @@
+---
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import { AUTHOR, SITE } from "../config/site";
+import { canonicalUrl } from "../lib/listing";
+
+interface Props {
+  title: string;
+  description: string;
+  /** "/" or "/apt/dists/" - shown under the title and used for the canonical URL. */
+  pathText: string;
+  siteName?: string;
+  ogType?: "website" | "article";
+}
+
+const { title, description, pathText, siteName = SITE.name, ogType = "website" } = Astro.props;
+const canonical = canonicalUrl(pathText);
+
+const jsonLd = JSON.stringify(
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteName,
+    url: SITE.url,
+    creator: {
+      "@type": "Person",
+      name: AUTHOR.name,
+      email: `mailto:${AUTHOR.email}`,
+      sameAs: [`https://x.com/${AUTHOR.twitterHandle}`, AUTHOR.githubUrl],
+    },
+  },
+  null,
+  2,
+).replaceAll("</", "<\\/");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content={SITE.themeColor} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={SITE.faviconSvg} type="image/svg+xml" />
+    <link rel="icon" href={SITE.faviconIco} sizes="any" />
+    <link rel="shortcut icon" href={SITE.faviconIco} type="image/x-icon" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={siteName} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="author" content={AUTHOR.name} />
+    <meta name="twitter:site" content={`@${AUTHOR.twitterHandle}`} />
+    <meta name="twitter:creator" content={`@${AUTHOR.twitterHandle}`} />
+
+    <link rel="me" href={AUTHOR.githubUrl} />
+    <link rel="author" href={`mailto:${AUTHOR.email}`} />
+
+    <script is:inline src={SITE.analytics.src} data-key={SITE.analytics.key} async></script>
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>{title}</h1>
+        <div class="subtitle">{description}</div>
+        <div class="path">{pathText}</div>
+      </header>
+
+      <slot />
+
+      <Footer />
+    </main>
+  </body>
+</html>

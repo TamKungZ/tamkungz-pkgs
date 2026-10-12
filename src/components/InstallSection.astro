@@ -1,0 +1,51 @@
+---
+import type { UsageBlock } from "../config/install";
+
+interface Props {
+  blocks: UsageBlock[];
+}
+const { blocks } = Astro.props;
+
+const BADGE: Record<string, string> = { bash: "#03983d", groovy: "#7a5b12", ini: "#245b91" };
+---
+
+<section class="install" aria-label="Install examples">
+  <div class="install-title">Install</div>
+  <div class="install-body">
+    {
+      blocks.map((block) => (
+        <div class="code-block">
+          <div class="code-head">
+            <div class="code-title">
+              <span class="code-lang" style={`color: ${BADGE[block.lang] ?? "#5f6d5f"};`}>{block.lang}</span>
+              <span>{block.label}</span>
+            </div>
+            <button class="copy-btn" type="button">copy</button>
+          </div>
+          <pre><code class={`language-${block.lang}`}>{block.code}</code></pre>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  document.addEventListener("click", async (event) => {
+    const btn = (event.target as HTMLElement).closest<HTMLButtonElement>(".copy-btn");
+    const code = btn?.closest(".code-block")?.querySelector("code");
+    if (!btn || !code) return;
+
+    const original = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(code.textContent ?? "");
+      btn.textContent = "copied";
+      btn.classList.add("copied");
+    } catch {
+      btn.textContent = "failed";
+    }
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove("copied");
+    }, 1400);
+  });
+</script>

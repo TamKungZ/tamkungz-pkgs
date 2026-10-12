@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import { LEGAL_PAGES } from "../config/legal";
+import { SITE } from "../config/site";
+
+export function getStaticPaths() {
+  return LEGAL_PAGES.map((page) => ({ params: { legal: page.slug }, props: { page } }));
+}
+
+const { page } = Astro.props;
+---
+
+<Base
+  title={`${SITE.name} - ${page.title}`}
+  description={page.description}
+  pathText={`/${page.slug}/`}
+  ogType="article"
+>
+  <article class="document">
+    {
+      page.sections.map((section) => (
+        <section class="document-section">
+          <h2>{section.heading}</h2>
+          {section.paragraphs.map((text) => <p>{text}</p>)}
+        </section>
+      ))
+    }
+  </article>
+</Base>

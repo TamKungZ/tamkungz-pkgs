@@ -1,0 +1,35 @@
+---
+import type { Row } from "../lib/listing";
+
+interface Props {
+  rows: Row[];
+  /** Show the "../" row. */
+  showParent: boolean;
+}
+const { rows, showParent } = Astro.props;
+---
+
+<section class="table-wrap" aria-label="Directory listing">
+  <table>
+    <tbody>
+      {
+        showParent && (
+          <tr class="row-directory">
+            <td class="type">dir</td>
+            <td class="name"><a href="../">../</a></td>
+            <td class="size" />
+          </tr>
+        )
+      }
+      {
+        rows.map((row) => (
+          <tr class={row.rowClass}>
+            <td class="type">{row.kind}</td>
+            <td class="name"><a href={row.label}>{row.label}</a></td>
+            <td class="size">{row.size}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</section>

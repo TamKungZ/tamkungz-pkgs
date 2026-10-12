@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "terms",
+    "title": "Terms of Use",
+    "description": "Terms for using TamKungZ_ Packages.",
+    "sections": [
+      {
+        "heading": "Repository purpose",
+        "paragraphs": [
+          "TamKungZ_ Packages is a package repository used to host packages and release artifacts published by TamKungZ_ for easier installation and download.",
+          "You may use this repository with supported package managers and build tools to download, install, update, build, test, or use packages published here."
+        ]
+      },
+      {
+        "heading": "Mirrors",
+        "paragraphs": [
+          "Mirroring is allowed for official distribution repositories and established community package repositories, such as repositories maintained by Ubuntu or other Linux distribution communities.",
+          "Do not create or publish unofficial personal mirrors, PPAs, Launchpad repositories, or independently hosted copies of this repository without permission.",
+          "A mirror must not be presented as an official TamKungZ_ repository unless it is maintained or approved by TamKungZ_."
+        ]
+      },
+      {
+        "heading": "Repository use",
+        "paragraphs": [
+          "Do not use this repository for abusive scraping, excessive automated requests, or other activity that disrupts normal package downloads and package-manager access."
+        ]
+      },
+      {
+        "heading": "Availability",
+        "paragraphs": [
+          "This repository is provided as-is without uptime, compatibility, support, or warranty guarantees.",
+          "Packages, metadata, repository paths, and signing keys may change when needed for maintenance, security, or releases."
+        ]
+      },
+      {
+        "heading": "Contact",
+        "paragraphs": [
+          "For mirror requests, takedown requests, permissions, or repository issues, contact dev@tamkungz.me."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "privacy",
+    "title": "Privacy Policy",
+    "description": "Privacy notes for visitors and package-manager clients using TamKungZ_ Packages.",
+    "sections": [
+      {
+        "heading": "Data collected",
+        "paragraphs": [
+          "This site does not provide user accounts, comments, or payment forms.",
+          "Normal web server, CDN, hosting, and security logs may record request metadata such as IP address, user agent, requested URL, referrer, status code, and timestamp."
+        ]
+      },
+      {
+        "heading": "Analytics",
+        "paragraphs": [
+          "Generated package index pages include the Ahrefs analytics script to understand aggregate site traffic.",
+          "Package managers and automated clients may also appear in server or analytics logs when they request repository metadata or artifacts."
+        ]
+      },
+      {
+        "heading": "Use of data",
+        "paragraphs": [
+          "Operational data is used to maintain the repository, investigate abuse, debug availability problems, and understand aggregate usage.",
+          "This site does not intentionally sell personal information."
+        ]
+      },
+      {
+        "heading": "Contact",
+        "paragraphs": [
+          "For privacy questions or removal requests, contact dev@tamkungz.me."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "license",
+    "title": "License and Artifact Use",
+    "description": "License information for this repository and the projects published through it.",
+    "sections": [
+      {
+        "heading": "Repository",
+        "paragraphs": [
+          "TamKungZ_ Packages is a package hosting repository. It provides packages, release files, repository metadata, and related files for download and installation.",
+          "The repository itself does not determine the license of the projects or packages published through it."
+        ]
+      },
+      {
+        "heading": "Project licenses",
+        "paragraphs": [
+          "Projects and packages published here may have their own licenses.",
+          "The license provided by each project applies to that project's source code, binaries, packages, and other artifacts as specified by that license.",
+          "Publishing a project through TamKungZ_ Packages does not replace or change the project's own license."
+        ]
+      },
+      {
+        "heading": "Mirroring",
+        "paragraphs": [
+          "Official distribution repositories and established community package repositories may mirror packages from this repository when permitted by the applicable project license.",
+          "Do not create unofficial personal mirrors, PPAs, Launchpad repositories, or independently hosted copies of this repository without permission.",
+          "Mirroring does not transfer ownership of the packages, projects, repository metadata, names, or branding."
+        ]
+      }
+    ]
+  }
+]

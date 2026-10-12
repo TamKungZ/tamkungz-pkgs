@@ -1,0 +1,18 @@
+PackageIdentifier: TamKungZ.ImageMerge
+PackageVersion: 1.1.1
+PackageLocale: en-US
+Publisher: TamKungZ_
+PublisherUrl: https://github.com/TamKungZ
+PublisherSupportUrl: https://github.com/TamKungZ/ImageMergePy/issues
+PackageName: ImageMerge
+PackageUrl: https://github.com/TamKungZ/ImageMergePy
+License: MIT
+LicenseUrl: https://github.com/TamKungZ/ImageMergePy/blob/main/LICENSE
+ShortDescription: A GUI tool to merge images and videos from multiple folders.
+Tags:
+  - image
+  - merge
+  - video
+  - gui
+ManifestType: defaultLocale
+ManifestVersion: 1.10.0

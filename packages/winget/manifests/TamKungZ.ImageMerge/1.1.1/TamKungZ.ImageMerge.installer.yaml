@@ -1,0 +1,10 @@
+PackageIdentifier: TamKungZ.ImageMerge
+PackageVersion: 1.1.1
+InstallerType: msi
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/TamKungZ/ImageMergePy/releases/download/v1.1.1/ImageMerge-windows-x64.msi
+    InstallerSha256: F80C52A0D5726F58CDFB3A548C1393A2B1BE17D7DB4C9304585E8DA06FE43173
+    ProductCode: "{A64BD5BD-9313-4D93-B172-220F3EF9B496}"
+ManifestType: installer
+ManifestVersion: 1.10.0

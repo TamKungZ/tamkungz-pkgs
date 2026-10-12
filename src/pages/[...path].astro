@@ -1,0 +1,29 @@
+---
+import type { InferGetStaticPropsType } from "astro";
+import FileTable from "../components/FileTable.astro";
+import InstallSection from "../components/InstallSection.astro";
+import Base from "../layouts/Base.astro";
+import { getPageMeta, getRows } from "../lib/listing";
+import { listDirectories } from "../lib/tree";
+
+/** One page per folder in packages/ (the home page is the folder root). */
+export function getStaticPaths() {
+  return listDirectories().map((segments) => ({
+    params: { path: segments.length > 0 ? segments.join("/") : undefined },
+    props: { segments },
+  }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { segments } = Astro.props;
+
+const meta = getPageMeta(segments);
+const rows = getRows(segments);
+// No "../" on the home page, nor on /maven/ (same as the original generator).
+const showParent = segments.length > (segments[0] === "maven" ? 1 : 0);
+---
+
+<Base title={meta.title} description={meta.description} pathText={meta.pathText} siteName={meta.siteName}>
+  {meta.usage && <InstallSection blocks={meta.usage} />}
+  <FileTable rows={rows} showParent={showParent} />
+</Base>

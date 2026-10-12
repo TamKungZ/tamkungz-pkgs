@@ -1,0 +1,23 @@
+TamKungZ Maven Repository License
+
+Copyright (c) 2026 TamKungZ_
+
+All rights reserved.
+
+This repository is used only as a public Maven package repository.
+
+You are allowed to download artifacts from this repository through Maven, Gradle,
+or other compatible dependency managers for the purpose of building, testing,
+or running projects that depend on those artifacts.
+
+You are not allowed to:
+- redistribute, mirror, or rehost artifacts from this repository;
+- modify and redistribute artifacts from this repository;
+- sell, sublicense, or claim ownership of artifacts from this repository;
+- use this repository as a source for creating unofficial package mirrors.
+
+Each artifact may include its own license terms in its POM file, documentation,
+or distribution page. If an artifact has separate license terms, those terms
+apply to that artifact.
+
+If no separate license is provided for an artifact, all rights are reserved.
