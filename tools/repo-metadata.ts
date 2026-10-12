@@ -6,10 +6,12 @@
  *   APT   dists/stable/...Packages(.gz), Release, InRelease, Release.gpg
  *   RPM   rpm/<arch>/repodata/ + repomd.xml.asc
  *   Arch  arch/<arch>/tamkungz.{db,files}(.tar.gz) + .sig
+ *   Maven .asc (+ checksums) for artifacts that did not arrive signed; existing .asc kept
  *
  * APK and XBPS indexes are signed with their own (non-GPG) keys, so they are NOT generated here;
  * they are copied through untouched. packages/ itself is never modified.
  */
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
@@ -121,6 +123,37 @@ function buildArch(stage: string, signer: Signer): void {
   }
 }
 
+// --- Maven -----------------------------------------------------------------
+
+const SIGNABLE = /\.(jar|pom|module|aar|war)$|(^|\/)maven-metadata\.xml$/;
+const HASHES: Record<string, string> = { ".md5": "md5", ".sha1": "sha1", ".sha256": "sha256", ".sha512": "sha512" };
+
+/**
+ * Artifacts that arrive already signed (from a Windows or Linux build machine) keep their .asc
+ * untouched. Artifacts without one are signed here with the Linux key, and get the same checksum
+ * files for the .asc as the artifact itself has.
+ */
+function buildMaven(stage: string, signer: Signer): void {
+  const root = path.join(stage, "maven");
+  let signed = 0;
+  let kept = 0;
+  for (const rel of walk(root)) {
+    if (!SIGNABLE.test(rel)) continue;
+    const file = path.join(root, rel);
+    if (fs.existsSync(`${file}.asc`)) {
+      kept++;
+      continue;
+    }
+    signer.detach(file, `${file}.asc`, true);
+    const asc = fs.readFileSync(`${file}.asc`);
+    for (const [suffix, algo] of Object.entries(HASHES)) {
+      if (fs.existsSync(file + suffix)) fs.writeFileSync(`${file}.asc${suffix}`, crypto.createHash(algo).update(asc).digest("hex"));
+    }
+    signed++;
+  }
+  if (signed + kept > 0) log(`maven: ${signed} signed here, ${kept} already signed (left as is)`);
+}
+
 // --- main ------------------------------------------------------------------
 
 function main(): void {
@@ -148,6 +181,7 @@ function main(): void {
     buildApt(STAGE_DIR, signer);
     buildRpm(STAGE_DIR, signer);
     buildArch(STAGE_DIR, signer);
+    buildMaven(STAGE_DIR, signer);
   } finally {
     signer.dispose();
   }
