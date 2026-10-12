@@ -4,8 +4,8 @@ export const SITE = {
   name: "TamKungZ_ Packages",
   mavenName: "TamKungZ_ Stable Maven Repository",
   url: "https://packages.tamkungz.me",
-  faviconSvg: "/favicon-20260714.svg",
-  faviconIco: "/favicon-20260714.ico",
+  faviconSvg: "/favicon.svg",
+  faviconIco: "/favicon.ico",
   themeColor: "#03983d",
   analytics: {
     src: "https://analytics.ahrefs.com/analytics.js",
