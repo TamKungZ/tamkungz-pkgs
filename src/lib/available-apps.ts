@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import { AUTHOR } from "../config/site";
+import { APP_SOURCES } from "../config/app-sources";
 import { PACKAGES_DIR } from "./tree";
 
 export interface AvailableApp {
   id: string;
   name: string;
-  sourceUrl: string;
+  sourceUrl?: string;
   installCommand: string;
 }
 
@@ -15,14 +15,6 @@ interface Installer {
   parseId: (relativePath: string, filename: string) => string | null;
   suffix: string;
 }
-
-const sources: Record<string, string> = {
-  glosslate: "https://github.com/TamKungZ/Glosslate",
-  livedesk: "https://github.com/TamKungZ/livedesk-live-wallpaper-for-gnome",
-  "tar-install": "https://github.com/TamKungZ/tarminal-tar-install",
-  tarminal: "https://github.com/TamKungZ/tarminal-tar-install",
-  "TamKungZ.ImageMerge": "https://github.com/TamKungZ/ImageMergePy",
-};
 
 const installers: Record<string, Installer> = {
   apt: {
@@ -118,7 +110,7 @@ export function listAvailableApps(rootName: string): AvailableApp[] {
   return [...ids].sort((a, b) => a.localeCompare(b)).map((id) => ({
     id,
     name: displayNames[id] ?? displayNames[id.toLowerCase()] ?? id,
-    sourceUrl: sources[id] ?? sources[id.toLowerCase()] ?? AUTHOR.githubUrl,
+    sourceUrl: APP_SOURCES[id.toLowerCase()],
     installCommand: installer.command(id),
   }));
 }
