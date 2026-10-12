@@ -14,7 +14,7 @@
     "tsx": "^4.23.15"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "dev": "astro dev",
