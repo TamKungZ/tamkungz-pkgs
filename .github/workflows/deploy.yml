@@ -59,9 +59,11 @@ jobs:
           echo "ec8c2e4d595863b5748c10d9ada1d51ac1da6f910a9d31682acd1a477310c64e  $archive" | sha256sum --check
           tar -xzf "$archive"
           cd "xbps-${version}"
-          ./configure --prefix=/usr/local --sysconfdir=/etc
+          ./configure --prefix=/usr/local --libdir=/usr/local/lib --sysconfdir=/etc
           make -j"$(nproc)"
           sudo make install
+          sudo ldconfig
+          xbps-rindex --version
 
       - run: npm ci
 
