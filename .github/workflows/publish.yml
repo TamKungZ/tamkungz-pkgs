@@ -145,4 +145,4 @@ jobs:
       - name: Trigger deployment for latest main
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run deploy.yml --ref main
+        run: gh workflow run deploy.yml --ref main --repo "$GITHUB_REPOSITORY"
