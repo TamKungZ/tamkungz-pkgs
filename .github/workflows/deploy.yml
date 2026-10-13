@@ -6,7 +6,7 @@ name: Deploy
 # Needs these repository secrets (Settings > Secrets and variables > Actions):
 #   GPG_PRIVATE_LINUX   armored private key that signs APT / RPM / pacman metadata
 #   GPG_PASSPHRASE      its passphrase (leave unset if the key has none)
-#   XBPS_PRIVATE_KEY    PEM-encoded RSA private key matching packages/xbps/tamkungz-void.pem.pub
+#   XBPS_PRIVATE_KEY    XBPS-only RSA private key; deploy derives and publishes its public key
 #   XBPS_PASSPHRASE     its passphrase (leave unset if the key has none)
 #
 # Pages source must be "GitHub Actions" (Settings > Pages > Build and deployment).

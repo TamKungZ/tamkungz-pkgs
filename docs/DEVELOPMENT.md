@@ -141,7 +141,7 @@ In this repo (Settings > Secrets and variables > Actions):
 | --- | --- |
 | `GPG_PRIVATE_LINUX` | Armored private key. Signs APT `Release`/`InRelease`, RPM `repomd.xml`, pacman `.db`/`.files`, and Maven artifacts that arrive without a `.asc`. Must match `packages/gpg.key` - the build refuses to publish otherwise. |
 | `GPG_PASSPHRASE` | Passphrase of that key (omit if none). |
-| `XBPS_PRIVATE_KEY` | RSA private key in PEM format. The build normalizes it for XBPS and verifies its public key matches `packages/xbps/tamkungz-void.pem.pub`. |
+| `XBPS_PRIVATE_KEY` | XBPS-only RSA private key in PEM format. The build normalizes it for XBPS and derives the public key published beside the repository. |
 | `XBPS_PASSPHRASE` | Passphrase of the XBPS RSA key (omit if none). |
 | `UPSTREAM_READ_TOKEN` | Optional. Read-only token, only for **private** upstream repos. |
 
@@ -184,10 +184,11 @@ Keep the private key outside the repository. The commands above use the current 
 repeat them for each architecture directory that has packages.
 
 XBPS repository indexes and every package archive are rebuilt/signed during deployment with the
-dedicated RSA key in `XBPS_PRIVATE_KEY`; the build refuses to publish if it does not match
-`packages/xbps/tamkungz-void.pem.pub`. The secret is normalized to XBPS's RSA PEM format in a
-temporary directory and removed when the build finishes. `xbps-rindex` is built from the pinned
-upstream release before any signing secrets are made available to a step.
+dedicated RSA key in `XBPS_PRIVATE_KEY`. The public key is derived from that secret on each
+deployment and published as `xbps/tamkungz-void.pem.pub`, so XBPS signing is independent of the
+GPG key and no stale public key is checked in. The secret is normalized to XBPS's RSA PEM format
+in a temporary directory and removed when the build finishes. `xbps-rindex` is built from the
+pinned upstream release before any signing secrets are made available to a step.
 
 ## Repository growth
 

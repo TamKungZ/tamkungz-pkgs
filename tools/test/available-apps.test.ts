@@ -21,7 +21,9 @@ test("pacman install commands avoid partial system upgrades", () => {
 });
 
 test("XBPS package files produce install commands", () => {
-  const app = listAvailableApps("xbps").find(({ id }) => id === "tarminal");
+  const apps = listAvailableApps("xbps");
+  const app = apps.find(({ id }) => id === "tarminal");
 
+  assert.deepEqual(apps.map(({ id }) => id), ["tar-install", "tarminal"]);
   assert.equal(app?.installCommand, "sudo xbps-install tarminal");
 });

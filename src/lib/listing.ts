@@ -40,7 +40,7 @@ const DESCRIPTIONS: Record<string, string> = {
   apt: "APT repository shared by TamKungZ_ Linux packages.",
   rpm: "RPM repository shared by TamKungZ_ Linux packages.",
   apk: "Alpine APK repository shared by TamKungZ_ Linux packages.",
-  xbps: "Void XBPS packages are listed here, but remote installation is disabled until the repository is signed.",
+  xbps: "Signed Void XBPS repository shared by TamKungZ_ packages.",
   arch: "Arch Linux pacman repository shared by TamKungZ_ Linux packages.",
   winget:
     "Windows Package Manager manifest templates and related release metadata for TamKungZ_ Windows packages.",

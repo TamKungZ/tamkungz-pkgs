@@ -139,16 +139,13 @@ function buildXbps(stage: string): void {
   const privateKey = process.env.XBPS_PRIVATE_KEY;
   if (!privateKey?.trim()) throw new Error("XBPS_PRIVATE_KEY is not set - cannot sign XBPS repositories.");
 
-  const publicKeyPath = path.join(root, "tamkungz-void.pem.pub");
-  if (!fs.existsSync(publicKeyPath)) throw new Error(`${publicKeyPath} is missing.`);
   if (!hasCommand("openssl")) throw new Error("missing tool: openssl (required to verify the XBPS signing key).");
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "xbps-sign-"));
   fs.chmodSync(tempDir, 0o700);
   const sourceKeyPath = path.join(tempDir, "source.pem");
   const privateKeyPath = path.join(tempDir, "private.pem");
-  const derivedKeyPath = path.join(tempDir, "derived-public.der");
-  const publishedKeyPath = path.join(tempDir, "published-public.der");
+  const publicKeyPath = path.join(root, "tamkungz-void.pem.pub");
   const passphrase = process.env.XBPS_PASSPHRASE ?? "";
   const env = { ...process.env, XBPS_PASSPHRASE: passphrase };
 
@@ -162,14 +159,9 @@ function buildXbps(stage: string): void {
     ], { env });
     fs.chmodSync(privateKeyPath, 0o600);
     run("openssl", [
-      "rsa", "-in", privateKeyPath, "-passin", passIn, "-pubout", "-outform", "DER", "-out", derivedKeyPath,
+      "rsa", "-in", privateKeyPath, "-passin", passIn, "-pubout", "-out", publicKeyPath,
     ], { env });
-    run("openssl", [
-      "pkey", "-pubin", "-in", publicKeyPath, "-outform", "DER", "-out", publishedKeyPath,
-    ]);
-    if (!fs.readFileSync(derivedKeyPath).equals(fs.readFileSync(publishedKeyPath))) {
-      throw new Error("XBPS_PRIVATE_KEY does not match packages/xbps/tamkungz-void.pem.pub.");
-    }
+    fs.chmodSync(publicKeyPath, 0o644);
 
     if (!hasCommand("xbps-rindex")) throw new Error("missing tool: xbps-rindex (required to build signed XBPS repositories).");
     for (const arch of arches) {
@@ -195,9 +187,7 @@ function buildXbps(stage: string): void {
           "--force", "--privkey", privateKeyPath, "--sign-pkg", pkg,
         ], { env: xbpsEnv });
         if (!fs.existsSync(`${pkg}.sig2`)) throw new Error(`xbps: signature was not created for ${path.basename(pkg)}.`);
-        run("openssl", [
-          "dgst", "-sha256", "-verify", publicKeyPath, "-signature", `${pkg}.sig2`, pkg,
-        ]);
+        run("openssl", ["dgst", "-sha256", "-verify", publicKeyPath, "-signature", `${pkg}.sig2`, pkg]);
       }
 
       if (!fs.existsSync(indexPath)) throw new Error(`xbps: repository index was not created for ${arch}.`);

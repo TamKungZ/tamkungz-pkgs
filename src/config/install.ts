@@ -93,7 +93,7 @@ sudo mkdir -p /etc/xbps.d
 printf 'repository=%s\\n' "${baseUrl}/xbps/$arch" | \\
   sudo tee /etc/xbps.d/99-tamkungz.conf >/dev/null
 
-# On first sync, verify the repository key against ${baseUrl}/xbps/tamkungz-void.pem.pub.
+# On first sync, compare the XBPS key prompt with ${baseUrl}/xbps/tamkungz-void.pem.pub before accepting it.
 sudo xbps-install -S
 sudo xbps-install ${pkg}`,
   };
