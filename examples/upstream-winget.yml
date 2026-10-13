@@ -1,0 +1,83 @@
+# WinGet publisher.
+#
+# Copy to .github/workflows/release.yml. The project-specific build script must:
+#   - build installers directly into dist/ (one file per architecture/installer);
+#   - write manifests as manifests/<PackageIdentifier>/<version>/*.yaml;
+#   - put each installer's SHA-256 and versioned GitHub Release URL in the manifest.
+# Example URL: https://github.com/OWNER/REPO/releases/download/v1.2.3/app-1.2.3-x64.exe
+# Keep manifests as data files; do not put installer binaries inside the manifest zip.
+#
+# If winget is not available on the selected Windows runner, validate with the WinGet
+# CLI on a Windows machine before tagging and keep the validation step in your own CI.
+
+name: Publish WinGet package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-release:
+    runs-on: windows-2025
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build installers and versioned manifests
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = $env:RELEASE_TAG -replace '^v', ''
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          # Replace with this project's real build/export script.
+          .\scripts\build-winget-release.ps1 -Version $version -OutputDirectory .\dist -ManifestDirectory .\manifests
+
+          $manifestRoot = Join-Path $PWD 'manifests'
+          $manifests = @(Get-ChildItem -LiteralPath $manifestRoot -Recurse -File -Filter '*.yaml')
+          if ($manifests.Count -eq 0) { throw "No YAML manifests found under manifests/<PackageId>/<version>/." }
+
+          if (Get-Command winget -ErrorAction SilentlyContinue) {
+            foreach ($manifest in $manifests) {
+              winget validate --manifest $manifest.FullName
+              if ($LASTEXITCODE -ne 0) { throw "winget validation failed: $($manifest.FullName)" }
+            }
+          } else {
+            throw "winget CLI is unavailable on this runner; validate the manifests before publishing."
+          }
+
+          $installerAssets = @(Get-ChildItem -LiteralPath .\dist -File)
+          if ($installerAssets.Count -eq 0) { throw "No installer assets were produced in dist/." }
+
+          $bundle = Join-Path $PWD 'dist\winget-manifests.zip'
+          Compress-Archive -Path (Join-Path $manifestRoot '*') -DestinationPath $bundle -Force
+
+      - name: Create GitHub release and upload installers and manifests
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $assets = @(Get-ChildItem -LiteralPath .\dist -File | ForEach-Object { $_.FullName })
+          & gh release create $env:GITHUB_REF_NAME @assets --repo $env:GITHUB_REPOSITORY --generate-notes --verify-tag
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Ask the package repository to publish this release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.PACKAGES_DISPATCH_TOKEN }}
+          SOURCE: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          PACKAGES_REPO: TamKungZ/tamkungz-pkgs
+        run: |
+          & gh workflow run publish.yml --repo $env:PACKAGES_REPO --ref main `
+            -f "source=$env:SOURCE" -f "tag=$env:TAG"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

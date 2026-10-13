@@ -7,9 +7,9 @@
 /**
  * Upstream repositories allowed to publish into this site.
  *
- * Everything ingested here ends up in a repository that is SIGNED with our GPG key,
- * so this list is the trust boundary: anyone who can cut a release in a listed repo can
- * ship a package that users will install as "TamKungZ_". Keep it as narrow as you can.
+ * Ingested packages end up in repositories signed with the relevant ecosystem key.
+ * This list is the trust boundary: anyone who can cut a release in a listed repo can ship
+ * a package that users will install as "TamKungZ_". Keep it as narrow as you can.
  *
  *   "TamKungZ/*"          every repo of the account (default, easiest)
  *   "TamKungZ/livedesk"   one specific repo

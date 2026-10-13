@@ -1,72 +1,86 @@
-# Copy this into an upstream project as .github/workflows/release.yml.
+# Generic publisher for projects that build native Linux package files.
 #
-# What it does: build -> attach the files to a GitHub release -> tell the packages site.
-# The packages site then sorts the files into its repositories BY FILE TYPE, signs the
-# metadata with its own key and deploys. Nothing here knows the site's folder layout and
-# no signing key leaves the packages repo.
+# Copy to .github/workflows/release.yml in the upstream project, then replace the
+# build command below with the project's real, tested packaging command. It must put
+# release assets directly in dist/ (not in nested folders).
 #
-# Files recognised on the release (anything else is ignored):
-#   *.deb  *.rpm  *.apk  *.xbps  *.pkg.tar.zst    + their .asc/.sig files
-#   maven-repo.zip         zip of the Maven repo your build produced (build/maven-repo/*)
-#   winget-manifests.zip   zip of <PackageId>/<version>/*.yaml
+# Supported package assets:
+#   *.deb
+#   *.rpm
+#   *.apk                  uploaded, but the central APK index still needs manual refresh/signing
+#   *.<arch>.xbps
+#   *.pkg.tar.zst / *.pkg.tar.xz
+#   <package-file>.asc / <package-file>.sig (optional matching sidecars)
 #
-# One-time setup in the upstream repo:
-#   secret PACKAGES_DISPATCH_TOKEN = fine-grained PAT, repository access limited to the
-#   packages repo, permission "Actions: Read and write" and nothing else.
-#   (That token can start a publish run; it cannot push code or read secrets.)
+# Use the Maven and WinGet examples for maven-repo.zip and winget-manifests.zip.
+# Do not put private signing keys here. The packages repository signs its own metadata.
+#
+# One-time setup:
+#   1. Add PACKAGES_DISPATCH_TOKEN as an Actions secret in this project. It must be a
+#      fine-grained PAT scoped only to TamKungZ/tamkungz-pkgs, with Actions: read/write.
+#   2. If this project is outside TamKungZ/*, ask the package-repository maintainer to
+#      add it to ALLOWED_SOURCES.
+#   3. Push a version tag after verifying that dist/ contains the expected packages.
 
-name: Release
+name: Publish packages
 
 on:
   push:
-    tags: ["v*"]
+    tags:
+      - "v*"
 
-env:
-  PACKAGES_REPO: TamKungZ/packages.tamkungz.me
+permissions:
+  contents: read
 
 jobs:
-  release:
+  build-and-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Create the release
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build packages
         env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes
-
-  build:
-    needs: release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [x86_64, aarch64] # one job per architecture; each uploads its own files
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Build
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
+          set -euo pipefail
           mkdir -p dist
-          # Replace with the real build for ${{ matrix.target }}. Put the results in dist/, e.g.
-          #   ./build-packages.sh ${{ matrix.target }}          -> dist/*.deb dist/*.rpm ...
-          #   ./gradlew publish && (cd build/maven-repo && zip -qr ../../dist/maven-repo.zip .)
-          echo "build for ${{ matrix.target }}"
+          # Replace this with the project's real package build. Example interface:
+          #   ./packaging/build-release.sh "$RELEASE_TAG" dist
+          ./packaging/build-release.sh "$RELEASE_TAG" dist
 
-      - name: Attach to the release
+          shopt -s nullglob
+          assets=(dist/*)
+          if ((${#assets[@]} == 0)); then
+            echo "The build produced no release assets in dist/." >&2
+            exit 1
+          fi
+          for asset in "${assets[@]}"; do
+            if [[ ! -f "$asset" ]]; then
+              echo "Release assets must be files directly inside dist/: $asset" >&2
+              exit 1
+            fi
+          done
+
+      - name: Create GitHub release and upload assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --clobber
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          assets=(dist/*)
+          gh release create "$GITHUB_REF_NAME" "${assets[@]}" \
+            --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag
 
-  publish-to-packages:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ask the packages site to publish this release
+      - name: Ask the package repository to publish this release
         env:
           GH_TOKEN: ${{ secrets.PACKAGES_DISPATCH_TOKEN }}
+          SOURCE: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          PACKAGES_REPO: TamKungZ/tamkungz-pkgs
         run: |
-          gh workflow run publish.yml --repo "$PACKAGES_REPO" \
-            -f source="$GITHUB_REPOSITORY" -f tag="$GITHUB_REF_NAME"
+          gh workflow run publish.yml --repo "$PACKAGES_REPO" --ref main \
+            -f source="$SOURCE" -f tag="$TAG"

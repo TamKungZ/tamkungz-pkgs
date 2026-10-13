@@ -5,7 +5,7 @@
  *
  * Copies package files only. Everything the old build generated (index.html pages, APT dists/,
  * RPM repodata/, pacman .db/.files) is left behind: the new pipeline regenerates it.
- * APK and XBPS indexes are kept, because their signing keys are not available to CI.
+ * The static APK index is kept; XBPS repository indexes are generated during deployment.
  * Safe to run again: identical files are skipped, differing ones are reported, never overwritten.
  */
 import fs from "node:fs";
@@ -23,6 +23,7 @@ function isGenerated(rel: string): boolean {
   if (section === "apt" && rest[0] === "dists") return true;
   if (section === "rpm" && rest.includes("repodata")) return true;
   if (section === "arch" && /^tamkungz\.(db|files)(\.tar\.gz)?(\.sig)?$/.test(name)) return true;
+  if (section === "xbps" && /^[a-z0-9_]+-repodata(\.sig2)?$/.test(name)) return true;
   if (section === "winget" && name === "README.md") return true; // already authored in packages/winget
   return false;
 }
