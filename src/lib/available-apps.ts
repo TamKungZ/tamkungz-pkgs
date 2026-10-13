@@ -39,18 +39,13 @@ const installers: Record<string, Installer> = {
     parseId: (_relativePath, filename) => filename.match(/^(.+?)-\d[^/]*-r\d+\.apk$/)?.[1] ?? null,
     command: (id) => `sudo apk add ${id}`,
   },
-  xbps: {
-    suffix: ".xbps",
-    parseId: (_relativePath, filename) => filename.match(/^(.+?)-\d[^_]*_\d+\.[^.]+\.xbps$/)?.[1] ?? null,
-    command: (id) => `sudo xbps-install ${id}`,
-  },
   arch: {
     suffix: ".pkg.tar.zst",
     parseId: (_relativePath, filename) => {
       if (filename.includes("-debug-")) return null;
       return filename.match(/^(.+?)-\d[^-]*-\d+-[^-]+\.pkg\.tar\.zst$/)?.[1] ?? null;
     },
-    command: (id) => `sudo pacman -S ${id}`,
+    command: (id) => `sudo pacman -Syu --needed ${id}`,
   },
   winget: {
     suffix: ".yaml",
@@ -59,7 +54,7 @@ const installers: Record<string, Installer> = {
       const id = parts[1];
       return parts[0] === "manifests" && filename === `${id}.yaml` ? id : null;
     },
-    command: (id) => `winget install --id ${id} -e`,
+    command: (id) => `winget install --id ${id} -e --source tamkungz`,
   },
 };
 

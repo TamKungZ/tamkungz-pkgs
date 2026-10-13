@@ -153,8 +153,12 @@ h1.mono { font-size: 22px; letter-spacing: 0; word-break: break-all; }
   display: flex; align-items: center; gap: 10px; padding: 14px;
   border-bottom: 1px solid var(--line);
 }
-.maven-select-row label { flex: none; color: var(--muted); font-size: 13px; }
-.maven-select { flex: 1; min-width: 0; }
+.maven-field { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.maven-field label { flex: none; color: var(--muted); font-size: 13px; }
+.maven-artifact-field { flex: 1 1 auto; }
+.maven-format-field { flex: 0 1 260px; }
+.maven-artifact-control { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.maven-select, .maven-format { width: 100%; min-width: 0; }
 .maven-source { flex: none; }
 .maven-source[hidden] { display: none; }
 .maven-install .code-block { margin: 14px; }
@@ -252,8 +256,9 @@ footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13px
   .available-app-name { flex: 1 1 auto; }
   .available-app > code { order: 1; flex: 1 0 100%; }
   .available-app-actions { margin-left: auto; }
-  .maven-select-row { flex-wrap: wrap; }
-  .maven-select-row label { flex: 1 0 calc(100% - 36px); }
-  .maven-select { order: 1; flex: 1 0 100%; }
-  .maven-source { order: 0; margin-left: auto; }
+  .maven-select-row { align-items: stretch; flex-wrap: wrap; }
+  .maven-field { flex: 1 1 100%; flex-wrap: wrap; }
+  .maven-field label { flex: 1 0 100%; }
+  .maven-artifact-control { flex: 1 0 100%; }
+  .maven-format { flex: 1 0 100%; }
 }

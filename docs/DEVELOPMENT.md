@@ -16,8 +16,8 @@ work. Astro + TypeScript, Node.js 22.12+. Visitors looking for what this is: see
                                                       -> astro build -> GitHub Pages
 ```
 
-- `packages/` is the **only** source of truth: package files, per-package signatures, public keys.
-  Committed to git, never contains generated indexes.
+- `packages/` is the **only** source of truth: package files, per-package signatures, public keys,
+  and the currently static APK index. Generated APT, RPM, and pacman metadata is never committed.
 - APT `dists/`, RPM `repodata/`, pacman `.db/.files` and every HTML listing are **generated in CI**
   from `packages/` and published directly. Nothing generated is committed, so there is nothing to
   conflict on when several projects publish at once.
@@ -120,10 +120,24 @@ domain stays configured there (`public/CNAME` is still copied into the site).
 
 ## Not generated here
 
-APK (`APKINDEX.tar.gz`) and XBPS (`<arch>-repodata`) indexes are signed with their own RSA keys
-(`tamkungz.rsa.pub`, `tamkungz-void.pem.pub`), not the GPG key, and are copied through as they were
-migrated. Ingesting a new `.apk` / `.xbps` stores the file but does **not** refresh its index - the
-package will not be visible to `apk` / `xbps` until the index is regenerated and committed.
+The APK index and key are currently static inputs in `packages/`; publishing a new `.apk` does not
+refresh the index. Before adding APK packages, regenerate and sign `APKINDEX.tar.gz` with the
+private key matching `packages/apk/tamkungz.rsa.pub`, then commit the refreshed index:
+
+```bash
+(cd packages/apk/x86_64 && apk index --output APKINDEX.tar.gz *.apk)
+abuild-sign -k /secure/path/tamkungz.rsa \
+  -p packages/apk/tamkungz.rsa.pub packages/apk/x86_64
+```
+
+Keep the private key outside the repository. The commands above use the current `x86_64` tree;
+repeat them for each architecture directory that has packages.
+
+XBPS package files are retained for browsing, but are not advertised as installable. Void requires
+remote repositories and package archives to be signed. The current XBPS files do not include the
+required signatures, and the private key matching `packages/xbps/tamkungz-void.pem.pub` is not
+available to the deploy workflow. Do not enable XBPS install instructions until the signing key is
+provisioned and the repository is verified with XBPS.
 
 ## Repository growth
 

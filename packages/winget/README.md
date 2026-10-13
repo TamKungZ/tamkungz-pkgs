@@ -16,9 +16,12 @@ winget source add --name tamkungz --arg https://repo.tamkungz.me/winget --type M
 winget install --id TamKungZ.ImageMerge -e
 ```
 
-Use `packages.tamkungz.me` manifests directly for local testing or submission:
+Use `packages.tamkungz.me` manifests for local testing or submission. The manifest path is local,
+so clone the repository first:
 
 ```powershell
+git clone https://github.com/TamKungZ/tamkungz-pkgs.git
+Set-Location tamkungz-pkgs
 winget settings --enable LocalManifestFiles
-winget install --manifest winget/manifests/TamKungZ.ImageMerge/1.1.1/
+winget install --manifest winget/manifests/TamKungZ.ImageMerge/2.0.2/
 ```

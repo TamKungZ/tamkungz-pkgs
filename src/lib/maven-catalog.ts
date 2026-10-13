@@ -83,6 +83,9 @@ export function listMavenArtifacts(): MavenArtifact[] {
   for (const relativePom of listPomFiles(root)) {
     const parts = relativePom.split(path.sep);
     if (parts.length < 4) continue;
+    const mainJar = path.join(root, `${relativePom.slice(0, -".pom".length)}.jar`);
+    if (!fs.existsSync(mainJar)) continue;
+
     const xml = fs.readFileSync(path.join(root, relativePom), "utf8");
     const groupId = tagValue(xml, "groupId") ?? parts.slice(0, -3).join(".");
     const artifactId = tagValue(xml, "artifactId") ?? parts.at(-3)!;

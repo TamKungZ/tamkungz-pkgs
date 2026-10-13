@@ -8,8 +8,9 @@
  *   Arch  arch/<arch>/tamkungz.{db,files}(.tar.gz) + .sig
  *   Maven .asc (+ checksums) for artifacts that did not arrive signed; existing .asc kept
  *
- * APK and XBPS indexes are signed with their own (non-GPG) keys, so they are NOT generated here;
- * they are copied through untouched. packages/ itself is never modified.
+ * The APK index is signed with its own key and copied through unchanged. XBPS files are copied
+ * through for browsing only; remote XBPS installation is not advertised until signing is wired in.
+ * packages/ itself is never modified.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";

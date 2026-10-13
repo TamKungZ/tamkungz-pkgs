@@ -7,6 +7,7 @@ test("Maven selector lists published artifacts at their latest version", () => {
   const nilkit = artifacts.find((artifact) => artifact.artifactId === "nilkit");
 
   assert.ok(artifacts.length > 0);
+  assert.ok(!artifacts.some((artifact) => artifact.artifactId === "examplelib"));
   assert.deepEqual(
     {
       groupId: nilkit?.groupId,
