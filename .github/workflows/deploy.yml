@@ -6,6 +6,8 @@ name: Deploy
 # Needs these repository secrets (Settings > Secrets and variables > Actions):
 #   GPG_PRIVATE_LINUX   armored private key that signs APT / RPM / pacman metadata
 #   GPG_PASSPHRASE      its passphrase (leave unset if the key has none)
+#   XBPS_PRIVATE_KEY    PEM-encoded RSA private key matching packages/xbps/tamkungz-void.pem.pub
+#   XBPS_PASSPHRASE     its passphrase (leave unset if the key has none)
 #
 # Pages source must be "GitHub Actions" (Settings > Pages > Build and deployment).
 
@@ -44,7 +46,22 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            apt-utils dpkg-dev createrepo-c pacman-package-manager makepkg libarchive-tools gnupg
+            apt-utils dpkg-dev createrepo-c pacman-package-manager makepkg libarchive-tools gnupg \
+            libarchive-dev libssl-dev zlib1g-dev pkg-config
+
+      # Build the pinned XBPS tools from upstream; this runs before any signing secret is available.
+      - name: Install XBPS tools
+        run: |
+          set -euo pipefail
+          version=0.60.7
+          archive="xbps-${version}.tar.gz"
+          curl -fsSL "https://github.com/void-linux/xbps/archive/${version}.tar.gz" -o "$archive"
+          echo "ec8c2e4d595863b5748c10d9ada1d51ac1da6f910a9d31682acd1a477310c64e  $archive" | sha256sum --check
+          tar -xzf "$archive"
+          cd "xbps-${version}"
+          ./configure --prefix=/usr/local --sysconfdir=/etc
+          make -j"$(nproc)"
+          sudo make install
 
       - run: npm ci
 
@@ -54,6 +71,8 @@ jobs:
         env:
           GPG_PRIVATE_LINUX: ${{ secrets.GPG_PRIVATE_LINUX }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          XBPS_PRIVATE_KEY: ${{ secrets.XBPS_PRIVATE_KEY }}
+          XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
         run: npm run repo:metadata
 
       - name: Build site

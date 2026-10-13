@@ -47,6 +47,11 @@ const installers: Record<string, Installer> = {
     },
     command: (id) => `sudo pacman -Syu --needed ${id}`,
   },
+  xbps: {
+    suffix: ".xbps",
+    parseId: (_relativePath, filename) => filename.match(/^(.+?)-\d[^_]*_\d+\.[^.]+\.xbps$/)?.[1] ?? null,
+    command: (id) => `sudo xbps-install ${id}`,
+  },
   winget: {
     suffix: ".yaml",
     parseId: (relativePath, filename) => {

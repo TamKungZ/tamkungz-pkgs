@@ -16,11 +16,11 @@ work. Astro + TypeScript, Node.js 22.12+. Visitors looking for what this is: see
                                                       -> astro build -> GitHub Pages
 ```
 
-- `packages/` is the **only** source of truth: package files, per-package signatures, public keys,
-  and the currently static APK index. Generated APT, RPM, and pacman metadata is never committed.
-- APT `dists/`, RPM `repodata/`, pacman `.db/.files` and every HTML listing are **generated in CI**
-  from `packages/` and published directly. Nothing generated is committed, so there is nothing to
-  conflict on when several projects publish at once.
+- `packages/` is the **only** source of truth: package files, public keys, and the currently static
+  APK index. APT, RPM, pacman, and XBPS metadata is generated in CI, never committed.
+- APT `dists/`, RPM `repodata/`, pacman `.db/.files`, XBPS `*-repodata` and every HTML listing are
+  **generated in CI** from `packages/` and published directly. Nothing generated is committed, so
+  there is nothing to conflict on when several projects publish at once.
 - Signing keys exist only as secrets of this repo. Upstream projects never see them.
 
 ## Layout
@@ -83,7 +83,7 @@ npm run build            # packages/ -> dist/
 npm test                 # unit tests (routing, maven-metadata merge, source allow-list)
 npm run check            # TypeScript / Astro check
 npm run ingest -- <dir> [--overwrite] [--dry-run]
-npm run repo:metadata    # needs gpg, apt-ftparchive, createrepo_c, repo-add + the signing secrets in env
+npm run repo:metadata    # needs gpg, apt-ftparchive, createrepo_c, repo-add, xbps-rindex + signing secrets
 npm run migrate -- <old-repo> [--dry-run]    # re-runnable import from the old Python repo
 ```
 
@@ -95,6 +95,8 @@ In this repo (Settings > Secrets and variables > Actions):
 | --- | --- |
 | `GPG_PRIVATE_LINUX` | Armored private key. Signs APT `Release`/`InRelease`, RPM `repomd.xml`, pacman `.db`/`.files`, and Maven artifacts that arrive without a `.asc`. Must match `packages/gpg.key` - the build refuses to publish otherwise. |
 | `GPG_PASSPHRASE` | Passphrase of that key (omit if none). |
+| `XBPS_PRIVATE_KEY` | RSA private key in PEM format. The build normalizes it for XBPS and verifies its public key matches `packages/xbps/tamkungz-void.pem.pub`. |
+| `XBPS_PASSPHRASE` | Passphrase of the XBPS RSA key (omit if none). |
 | `UPSTREAM_READ_TOKEN` | Optional. Read-only token, only for **private** upstream repos. |
 
 In each upstream project: `PACKAGES_DISPATCH_TOKEN` - fine-grained PAT, repository access = this
@@ -108,8 +110,8 @@ domain stays configured there (`public/CNAME` is still copied into the site).
 
 - Secrets are reachable only from `deploy.yml` / `publish.yml`, which run on `main` or by manual
   dispatch. `ci.yml` (pull requests, forks) has no secrets and a read-only token.
-- The key is used in exactly one step, imported into a throw-away keyring, passed via stdin / a
-  0600 file (never argv), deleted afterwards. It is never printed.
+- Signing secrets are used only in the metadata-build step. Private keys are stored in 0600
+  temporary files, deleted afterwards, and are never printed or passed as command-line contents.
 - Workflow inputs go through environment variables, never interpolated into shell. Repo name and
   tag are validated; the repo must be on `ALLOWED_SOURCES`.
 - Release archives are untrusted: symlinks/special files are rejected, names are validated, paths
@@ -133,11 +135,11 @@ abuild-sign -k /secure/path/tamkungz.rsa \
 Keep the private key outside the repository. The commands above use the current `x86_64` tree;
 repeat them for each architecture directory that has packages.
 
-XBPS package files are retained for browsing, but are not advertised as installable. Void requires
-remote repositories and package archives to be signed. The current XBPS files do not include the
-required signatures, and the private key matching `packages/xbps/tamkungz-void.pem.pub` is not
-available to the deploy workflow. Do not enable XBPS install instructions until the signing key is
-provisioned and the repository is verified with XBPS.
+XBPS repository indexes and every package archive are rebuilt/signed during deployment with the
+dedicated RSA key in `XBPS_PRIVATE_KEY`; the build refuses to publish if it does not match
+`packages/xbps/tamkungz-void.pem.pub`. The secret is normalized to XBPS's RSA PEM format in a
+temporary directory and removed when the build finishes. `xbps-rindex` is built from the pinned
+upstream release before any signing secrets are made available to a step.
 
 ## Repository growth
 

@@ -21,7 +21,9 @@ key. Start there: **<https://packages.tamkungz.me>**.
 ## Is it safe?
 
 - Repository metadata (APT, RPM, pacman) is signed with TamKungZ_'s GPG key, published at
-  <https://packages.tamkungz.me/gpg.key>. Check the fingerprint on the site before trusting it.
+  <https://packages.tamkungz.me/gpg.key>. XBPS metadata and packages are signed with the separate
+  RSA key published at <https://packages.tamkungz.me/xbps/tamkungz-void.pem.pub>.
+  Verify the key before trusting the repository.
 - Packages are added only by an automated pipeline from TamKungZ_'s own projects, not by pull
   requests. Pull requests from outside are welcome for the website code, but packages are not
   accepted this way.

@@ -84,6 +84,21 @@ sudo pacman -Syu --needed ${pkg}`,
   };
 }
 
+export function xbps(baseUrl: string, pkg = "<package-name>"): UsageBlock {
+  return {
+    label: "Void Linux / XBPS",
+    lang: "bash",
+    code: `arch="$(xbps-uhelper arch)"
+sudo mkdir -p /etc/xbps.d
+printf 'repository=%s\\n' "${baseUrl}/xbps/$arch" | \\
+  sudo tee /etc/xbps.d/99-tamkungz.conf >/dev/null
+
+# On first sync, verify the repository key against ${baseUrl}/xbps/tamkungz-void.pem.pub.
+sudo xbps-install -S
+sudo xbps-install ${pkg}`,
+  };
+}
+
 export function maven(repoUrl: string, name = "TamKungZ Packages"): UsageBlock {
   return {
     label: "Gradle",
@@ -109,7 +124,7 @@ winget install --id ${id} -e --source tamkungz`,
 
 /** Everything shown on the home page. Maven is included only when /maven exists. */
 export function homeBlocks(baseUrl: string, hasMaven: boolean): UsageBlock[] {
-  const blocks = [apt(baseUrl), rpm(baseUrl), alpine(baseUrl), pacman(baseUrl), winget()];
+  const blocks = [apt(baseUrl), rpm(baseUrl), alpine(baseUrl), xbps(baseUrl), pacman(baseUrl), winget()];
   if (hasMaven) blocks.push(maven(`${baseUrl}/maven/`));
   return blocks;
 }

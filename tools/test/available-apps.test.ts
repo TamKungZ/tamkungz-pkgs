@@ -20,6 +20,8 @@ test("pacman install commands avoid partial system upgrades", () => {
   assert.equal(app?.installCommand, "sudo pacman -Syu --needed tarminal");
 });
 
-test("XBPS packages are not presented with non-working remote install commands", () => {
-  assert.deepEqual(listAvailableApps("xbps"), []);
+test("XBPS package files produce install commands", () => {
+  const app = listAvailableApps("xbps").find(({ id }) => id === "tarminal");
+
+  assert.equal(app?.installCommand, "sudo xbps-install tarminal");
 });
