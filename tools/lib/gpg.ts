@@ -75,6 +75,20 @@ export class Signer {
     this.gpg([...(armor ? ["--armor"] : []), "--detach-sign", "-o", out, file]);
   }
 
+  /** Prove that the imported key and configured passphrase can sign and verify data. */
+  selfTest(): void {
+    const file = path.join(this.home, ".signing-test");
+    const signature = `${file}.sig`;
+    try {
+      fs.writeFileSync(file, "TamKungZ signing key self-test\n", { mode: 0o600, flag: "wx" });
+      this.detach(file, signature, false);
+      run("gpg", ["--homedir", this.home, "--batch", "--no-tty", "--verify", signature, file]);
+    } finally {
+      fs.rmSync(file, { force: true });
+      fs.rmSync(signature, { force: true });
+    }
+  }
+
   dispose(): void {
     try {
       run("gpgconf", ["--homedir", this.home, "--kill", "gpg-agent"]);

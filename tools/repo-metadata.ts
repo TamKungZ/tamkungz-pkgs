@@ -129,72 +129,123 @@ function buildArch(stage: string, signer: Signer): void {
 
 const XBPS_SIGNED_BY = "TamKungZ_ <dev@tamkungz.me>";
 
-function buildXbps(stage: string): void {
-  const root = path.join(stage, "xbps");
-  const arches = subdirs(root).filter((arch) =>
+interface XbpsSigning {
+  tempDir: string;
+  privateKeyPath: string;
+  publicKeyPath: string;
+}
+
+function hasXbpsPackages(root: string): boolean {
+  return subdirs(root).some((arch) =>
     fs.readdirSync(path.join(root, arch)).some((name) => name.endsWith(".xbps")),
   );
-  if (arches.length === 0) return log("xbps: no .xbps files, skipped");
+}
 
+function prepareXbpsSigning(): XbpsSigning | null {
+  if (!hasXbpsPackages(path.join(PACKAGES_DIR, "xbps"))) {
+    log("xbps: no .xbps files, signing preflight skipped");
+    return null;
+  }
   const privateKey = process.env.XBPS_PRIVATE_KEY;
   if (!privateKey?.trim()) throw new Error("XBPS_PRIVATE_KEY is not set - cannot sign XBPS repositories.");
-
   if (!hasCommand("openssl")) throw new Error("missing tool: openssl (required to verify the XBPS signing key).");
+  if (!hasCommand("xbps-rindex")) throw new Error("missing tool: xbps-rindex (required to build signed XBPS repositories).");
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "xbps-sign-"));
   fs.chmodSync(tempDir, 0o700);
   const sourceKeyPath = path.join(tempDir, "source.pem");
   const privateKeyPath = path.join(tempDir, "private.pem");
-  const publicKeyPath = path.join(root, "tamkungz-void.pem.pub");
+  const publicKeyPath = path.join(tempDir, "tamkungz-void.pem.pub");
   const passphrase = process.env.XBPS_PASSPHRASE ?? "";
   const env = { ...process.env, XBPS_PASSPHRASE: passphrase };
 
   try {
     fs.writeFileSync(sourceKeyPath, privateKey, { mode: 0o600, flag: "wx" });
     const passIn = passphrase ? "env:XBPS_PASSPHRASE" : "pass:";
+    run("openssl", ["rsa", "-in", sourceKeyPath, "-passin", passIn, "-check", "-noout"], { env });
     run("openssl", [
       "rsa", "-in", sourceKeyPath, "-passin", passIn,
       "-traditional", ...(passphrase ? ["-aes256", "-passout", "env:XBPS_PASSPHRASE"] : []),
       "-out", privateKeyPath,
     ], { env });
     fs.chmodSync(privateKeyPath, 0o600);
+    run("openssl", ["rsa", "-in", privateKeyPath, "-passin", passIn, "-check", "-noout"], { env });
     run("openssl", [
       "rsa", "-in", privateKeyPath, "-passin", passIn, "-pubout", "-out", publicKeyPath,
     ], { env });
     fs.chmodSync(publicKeyPath, 0o644);
 
-    if (!hasCommand("xbps-rindex")) throw new Error("missing tool: xbps-rindex (required to build signed XBPS repositories).");
-    for (const arch of arches) {
-      const dir = path.join(root, arch);
-      const packages = fs.readdirSync(dir)
-        .filter((name) => name.endsWith(".xbps"))
-        .sort()
-        .map((name) => path.join(dir, name));
-      const indexPath = path.join(dir, `${arch}-repodata`);
-
-      fs.rmSync(indexPath, { force: true });
-      fs.rmSync(`${indexPath}.sig2`, { force: true });
-
-      const xbpsEnv = { ...env, XBPS_ARCH: arch };
-      for (const pkg of packages) run("xbps-rindex", ["--add", pkg], { env: xbpsEnv });
-      run("xbps-rindex", [
-        "--privkey", privateKeyPath,
-        "--signedby", XBPS_SIGNED_BY,
-        "--sign", dir,
-      ], { env: xbpsEnv });
-      for (const pkg of packages) {
-        run("xbps-rindex", [
-          "--force", "--privkey", privateKeyPath, "--sign-pkg", pkg,
-        ], { env: xbpsEnv });
-        if (!fs.existsSync(`${pkg}.sig2`)) throw new Error(`xbps: signature was not created for ${path.basename(pkg)}.`);
-        run("openssl", ["dgst", "-sha256", "-verify", publicKeyPath, "-signature", `${pkg}.sig2`, pkg]);
-      }
-
-      if (!fs.existsSync(indexPath)) throw new Error(`xbps: repository index was not created for ${arch}.`);
-      log(`xbps: ${arch} (${packages.length} package(s)), repository and package signatures created`);
+    const [arch, sourceDir] = subdirs(path.join(PACKAGES_DIR, "xbps"))
+      .map((name) => [name, path.join(PACKAGES_DIR, "xbps", name)] as const)
+      .find(([, dir]) => fs.readdirSync(dir).some((name) => name.endsWith(".xbps"))) ?? [];
+    if (!arch || !sourceDir) throw new Error("XBPS packages disappeared during signing preflight.");
+    const testDir = path.join(tempDir, "repository");
+    fs.mkdirSync(testDir);
+    const testPackageName = fs.readdirSync(sourceDir).find((name) => name.endsWith(".xbps"));
+    if (!testPackageName) throw new Error("XBPS package disappeared during signing preflight.");
+    const testPackage = path.join(testDir, testPackageName);
+    fs.copyFileSync(path.join(sourceDir, testPackageName), testPackage);
+    const xbpsEnv = { ...env, XBPS_ARCH: arch };
+    run("xbps-rindex", ["--add", testPackage], { env: xbpsEnv });
+    run("xbps-rindex", [
+      "--privkey", privateKeyPath,
+      "--signedby", XBPS_SIGNED_BY,
+      "--sign", testDir,
+    ], { env: xbpsEnv });
+    run("xbps-rindex", [
+      "--force", "--privkey", privateKeyPath, "--sign-pkg", testPackage,
+    ], { env: xbpsEnv });
+    if (!fs.existsSync(path.join(testDir, `${arch}-repodata`)) || !fs.existsSync(`${testPackage}.sig2`)) {
+      throw new Error("XBPS signing preflight did not produce repository metadata and package signatures.");
     }
-  } finally {
+    run("openssl", [
+      "dgst", "-sha256", "-verify", publicKeyPath, "-signature", `${testPackage}.sig2`, testPackage,
+    ]);
+
+    return { tempDir, privateKeyPath, publicKeyPath };
+  } catch (error) {
     fs.rmSync(tempDir, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+function buildXbps(stage: string, signing: XbpsSigning | null): void {
+  const root = path.join(stage, "xbps");
+  const arches = subdirs(root).filter((arch) =>
+    fs.readdirSync(path.join(root, arch)).some((name) => name.endsWith(".xbps")),
+  );
+  if (arches.length === 0) return log("xbps: no .xbps files, skipped");
+  if (!signing) throw new Error("xbps: signing key was not prepared before repository generation.");
+
+  fs.copyFileSync(signing.publicKeyPath, path.join(root, "tamkungz-void.pem.pub"));
+  for (const arch of arches) {
+    const dir = path.join(root, arch);
+    const packages = fs.readdirSync(dir)
+      .filter((name) => name.endsWith(".xbps"))
+      .sort()
+      .map((name) => path.join(dir, name));
+    const indexPath = path.join(dir, `${arch}-repodata`);
+
+    fs.rmSync(indexPath, { force: true });
+    fs.rmSync(`${indexPath}.sig2`, { force: true });
+
+    const xbpsEnv = { ...process.env, XBPS_PASSPHRASE: process.env.XBPS_PASSPHRASE ?? "", XBPS_ARCH: arch };
+    for (const pkg of packages) run("xbps-rindex", ["--add", pkg], { env: xbpsEnv });
+    run("xbps-rindex", [
+      "--privkey", signing.privateKeyPath,
+      "--signedby", XBPS_SIGNED_BY,
+      "--sign", dir,
+    ], { env: xbpsEnv });
+    for (const pkg of packages) {
+      run("xbps-rindex", [
+        "--force", "--privkey", signing.privateKeyPath, "--sign-pkg", pkg,
+      ], { env: xbpsEnv });
+      if (!fs.existsSync(`${pkg}.sig2`)) throw new Error(`xbps: signature was not created for ${path.basename(pkg)}.`);
+      run("openssl", ["dgst", "-sha256", "-verify", path.join(root, "tamkungz-void.pem.pub"), "-signature", `${pkg}.sig2`, pkg]);
+    }
+
+    if (!fs.existsSync(indexPath)) throw new Error(`xbps: repository index was not created for ${arch}.`);
+    log(`xbps: ${arch} (${packages.length} package(s)), repository and package signatures created`);
   }
 }
 
@@ -238,28 +289,34 @@ function main(): void {
   if (!fs.existsSync(PACKAGES_DIR)) throw new Error(`${PACKAGES_DIR} not found`);
 
   assertPlainTree(PACKAGES_DIR);
-  fs.rmSync(STAGE_DIR, { recursive: true, force: true });
-  fs.cpSync(PACKAGES_DIR, STAGE_DIR, { recursive: true });
-  log(`staged ${path.relative(process.cwd(), PACKAGES_DIR)}/ -> ${path.relative(process.cwd(), STAGE_DIR)}/`);
-
   const signer = Signer.fromEnv(SIGNING.linuxKeyEnv, SIGNING.passphraseEnv);
+  let xbpsSigning: XbpsSigning | null = null;
   try {
-    // The public key published at /gpg.key is what users trust. If the secret key is a
-    // different one, every client would fail verification - so refuse to publish.
-    const published = publicFingerprints(path.join(STAGE_DIR, "gpg.key"));
+    const published = publicFingerprints(path.join(PACKAGES_DIR, "gpg.key"));
     if (!published.includes(signer.fingerprint)) {
       throw new Error(
         `signing key ${signer.fingerprint} does not match packages/gpg.key (${published.join(", ") || "none"}). ` +
           "Update packages/gpg.key on purpose if you are rotating keys.",
       );
     }
+    signer.selfTest();
+    log(`gpg: secret key is usable and matches packages/gpg.key (${signer.fingerprint})`);
+
+    xbpsSigning = prepareXbpsSigning();
+    if (xbpsSigning) log("xbps: RSA private key is usable and its dedicated public key was generated");
+
+    fs.rmSync(STAGE_DIR, { recursive: true, force: true });
+    fs.cpSync(PACKAGES_DIR, STAGE_DIR, { recursive: true });
+    log(`staged ${path.relative(process.cwd(), PACKAGES_DIR)}/ -> ${path.relative(process.cwd(), STAGE_DIR)}/`);
+
     buildApt(STAGE_DIR, signer);
     buildRpm(STAGE_DIR, signer);
     buildArch(STAGE_DIR, signer);
-    buildXbps(STAGE_DIR);
+    buildXbps(STAGE_DIR, xbpsSigning);
     buildMaven(STAGE_DIR, signer);
   } finally {
     signer.dispose();
+    if (xbpsSigning) fs.rmSync(xbpsSigning.tempDir, { recursive: true, force: true });
   }
   log("done");
 }

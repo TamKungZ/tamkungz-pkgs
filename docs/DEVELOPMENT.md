@@ -187,8 +187,12 @@ XBPS repository indexes and every package archive are rebuilt/signed during depl
 dedicated RSA key in `XBPS_PRIVATE_KEY`. The public key is derived from that secret on each
 deployment and published as `xbps/tamkungz-void.pem.pub`, so XBPS signing is independent of the
 GPG key and no stale public key is checked in. The secret is normalized to XBPS's RSA PEM format
-in a temporary directory and removed when the build finishes. `xbps-rindex` is built from the
-pinned upstream release before any signing secrets are made available to a step.
+in a temporary directory and removed when the build finishes. Before generating any repository
+metadata, the build checks that the GPG secret can sign and verify a probe and matches
+`packages/gpg.key`; it also checks the XBPS RSA key/passphrase by building and signing a disposable
+repository using an existing XBPS package. Any failed check aborts before staging or rebuilding
+APT, RPM, pacman, XBPS, or Maven metadata. `xbps-rindex` is built from the pinned upstream release
+before any signing secrets are made available to a step.
 
 ## Repository growth
 
