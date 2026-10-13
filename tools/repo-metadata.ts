@@ -193,7 +193,7 @@ function prepareXbpsSigning(): XbpsSigning | null {
       "--sign", testDir,
     ], { env: xbpsEnv });
     run("xbps-rindex", [
-      "--force", "--privkey", privateKeyPath, "--sign-pkg", testPackage,
+      "--privkey", privateKeyPath, "--sign-pkg", testPackage,
     ], { env: xbpsEnv });
     if (!fs.existsSync(path.join(testDir, `${arch}-repodata`)) || !fs.existsSync(`${testPackage}.sig2`)) {
       throw new Error("XBPS signing preflight did not produce repository metadata and package signatures.");
@@ -238,7 +238,7 @@ function buildXbps(stage: string, signing: XbpsSigning | null): void {
     ], { env: xbpsEnv });
     for (const pkg of packages) {
       run("xbps-rindex", [
-        "--force", "--privkey", signing.privateKeyPath, "--sign-pkg", pkg,
+        "--privkey", signing.privateKeyPath, "--sign-pkg", pkg,
       ], { env: xbpsEnv });
       if (!fs.existsSync(`${pkg}.sig2`)) throw new Error(`xbps: signature was not created for ${path.basename(pkg)}.`);
       run("openssl", ["dgst", "-sha256", "-verify", path.join(root, "tamkungz-void.pem.pub"), "-signature", `${pkg}.sig2`, pkg]);
