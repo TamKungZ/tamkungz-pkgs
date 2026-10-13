@@ -8,5 +8,6 @@ export const APP_SOURCES: Readonly<Record<string, string>> = {
   livedesk: "https://github.com/TamKungZ/livedesk-live-wallpaper-for-gnome",
   "tar-install": "https://github.com/TamKungZ/tarminal-tar-install",
   tarminal: "https://github.com/TamKungZ/tarminal-tar-install",
+  imagemerge: "https://github.com/TamKungZ/ImageMergePy",
   "tamkungz.imagemerge": "https://github.com/TamKungZ/ImageMergePy",
 };

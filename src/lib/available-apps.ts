@@ -68,7 +68,8 @@ const displayNames: Record<string, string> = {
   livedesk: "Livedesk",
   "tar-install": "tar-install",
   tarminal: "Tarminal",
-  "TamKungZ.ImageMerge": "ImageMerge",
+  imagemerge: "ImageMerge",
+  "tamkungz.imagemerge": "ImageMerge",
 };
 
 function isPackageId(value: string): boolean {

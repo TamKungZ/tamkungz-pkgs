@@ -6,11 +6,23 @@ test("valid WinGet manifests are detected and produce install commands", () => {
   const app = listAvailableApps("winget").find(({ id }) => id === "TamKungZ.ImageMerge");
 
   assert.deepEqual(
-    { id: app?.id, installCommand: app?.installCommand },
+    { id: app?.id, name: app?.name, sourceUrl: app?.sourceUrl, installCommand: app?.installCommand },
     {
       id: "TamKungZ.ImageMerge",
+      name: "ImageMerge",
+      sourceUrl: "https://github.com/TamKungZ/ImageMergePy",
       installCommand: "winget install --id TamKungZ.ImageMerge -e --source tamkungz",
     },
+  );
+});
+
+test("APT and WinGet ImageMerge packages share the same display name and source", () => {
+  const aptApp = listAvailableApps("apt").find(({ id }) => id === "imagemerge");
+  const wingetApp = listAvailableApps("winget").find(({ id }) => id === "TamKungZ.ImageMerge");
+
+  assert.deepEqual(
+    { name: aptApp?.name, sourceUrl: aptApp?.sourceUrl },
+    { name: wingetApp?.name, sourceUrl: wingetApp?.sourceUrl },
   );
 });
 
