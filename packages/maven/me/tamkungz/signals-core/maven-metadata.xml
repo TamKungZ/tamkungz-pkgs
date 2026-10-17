@@ -3,10 +3,10 @@
   <groupId>me.tamkungz</groupId>
   <artifactId>signals-core</artifactId>
   <versioning>
-    <latest>0.1.0-SNAPSHOT</latest>
+    <latest>0.1.1-SNAPSHOT</latest>
     <versions>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.1-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20260803032041</lastUpdated>
+    <lastUpdated>20261017173950</lastUpdated>
   </versioning>
 </metadata>
