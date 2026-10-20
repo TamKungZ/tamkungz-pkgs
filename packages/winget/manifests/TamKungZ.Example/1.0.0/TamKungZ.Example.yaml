@@ -1,0 +1,6 @@
+# Replace this example before publishing a real package.
+PackageIdentifier: TamKungZ.Example
+PackageVersion: 1.0.0
+DefaultLocale: en-US
+ManifestType: version
+ManifestVersion: 1.10.0

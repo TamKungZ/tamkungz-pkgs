@@ -1,0 +1,19 @@
+# Single-file manifest example for small packages.
+# Replace all example values before publishing.
+PackageIdentifier: TamKungZ.Example
+PackageVersion: 1.0.0
+PackageLocale: en-US
+Publisher: TamKungZ_
+PackageName: Example
+License: Proprietary
+ShortDescription: Example TamKungZ_ Windows package manifest.
+InstallerType: exe
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://packages.tamkungz.me/winget/installers/example/1.0.0/example-1.0.0-x64.exe
+    InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000
+  - Architecture: arm64
+    InstallerUrl: https://packages.tamkungz.me/winget/installers/example/1.0.0/example-1.0.0-arm64.exe
+    InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000
+ManifestType: singleton
+ManifestVersion: 1.10.0

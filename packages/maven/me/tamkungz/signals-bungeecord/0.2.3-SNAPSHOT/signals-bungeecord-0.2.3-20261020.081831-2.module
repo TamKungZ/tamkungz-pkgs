@@ -1,0 +1,139 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz",
+    "module": "signals-bungeecord",
+    "version": "0.2.3-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-core",
+          "version": {
+            "requires": "0.2.3-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-bungeecord-0.2.3-SNAPSHOT.jar",
+          "url": "signals-bungeecord-0.2.3-SNAPSHOT.jar",
+          "size": 15269,
+          "sha512": "a78fea85bb75a6137d0100e26725e061567f625c19f9ef3e1a96c989d946f97934f7894a38096c2532c9d69b4c6ae43dbcdbc4796351d70662ad48686a239494",
+          "sha256": "452ec10d2055b30174bac332d310272b147a35e1591b33f86c438fe36d07ce31",
+          "sha1": "dca6c2d7b13a28e59a24808af9017a4301bb6e97",
+          "md5": "3c789779153bcfe45b10c8e9ceef14cf"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-core",
+          "version": {
+            "requires": "0.2.3-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-bungeecord-0.2.3-SNAPSHOT.jar",
+          "url": "signals-bungeecord-0.2.3-SNAPSHOT.jar",
+          "size": 15269,
+          "sha512": "a78fea85bb75a6137d0100e26725e061567f625c19f9ef3e1a96c989d946f97934f7894a38096c2532c9d69b4c6ae43dbcdbc4796351d70662ad48686a239494",
+          "sha256": "452ec10d2055b30174bac332d310272b147a35e1591b33f86c438fe36d07ce31",
+          "sha1": "dca6c2d7b13a28e59a24808af9017a4301bb6e97",
+          "md5": "3c789779153bcfe45b10c8e9ceef14cf"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-bungeecord-0.2.3-SNAPSHOT-sources.jar",
+          "url": "signals-bungeecord-0.2.3-SNAPSHOT-sources.jar",
+          "size": 14893,
+          "sha512": "d60689c2a99605b16881ad395b51663471f1e7f058759a594d7f820d38d32f886624c6ca8f637425b6ee6916a44c650a5e6dfaa01fb50676a26176d6547c4f3f",
+          "sha256": "355ab174801817f573f985277e7cfcdab38b7eaa11b65fbaca675a48ecba4d78",
+          "sha1": "89905a63579eca8aa901a68912a478ba7c759e3d",
+          "md5": "943343415cb2275b942e07e1288533ed"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-bungeecord-0.2.3-SNAPSHOT-javadoc.jar",
+          "url": "signals-bungeecord-0.2.3-SNAPSHOT-javadoc.jar",
+          "size": 120581,
+          "sha512": "2021eaffcc702139ac51599a900f373b0327bbfd9e7011a92b23f004423b4ea39236e690f888d8943c6416f85d4b6c61e5c20f25bf303bf17e78316d1723685f",
+          "sha256": "cb467005ae80b35e3925403697f935335cf283512a4264de7521d0fb22db5ac2",
+          "sha1": "13541e4dae98a1057244fd5a7f7dc50038af1296",
+          "md5": "aec18dc460a50f60d21670b846d5aacc"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-bungeecord-0.2.3-SNAPSHOT-all.jar",
+          "url": "signals-bungeecord-0.2.3-SNAPSHOT-all.jar",
+          "size": 41913,
+          "sha512": "e10417d62bdbe2131638ee9c6c36c6df2053511b71ca8435f49b603a24a9f81fa892990ba2a10de6fba56f00fdef80e53aca39d4f101fa40627581e6a8b1cefe",
+          "sha256": "db11c7009898461515a304c8ae2011538a2722d61559e0ec035178f6edf0d17f",
+          "sha1": "0466aba74cc9dd2f3c1b10d1cb4943ad3c2b4232",
+          "md5": "06fe9b944ab6e2651873bba20aac3025"
+        }
+      ]
+    }
+  ]
+}

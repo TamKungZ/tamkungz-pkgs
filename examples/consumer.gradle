@@ -1,0 +1,10 @@
+repositories {
+    maven {
+        name = "TamKungZ Maven"
+        url = uri("https://packages.tamkungz.me/maven/")
+    }
+}
+
+dependencies {
+    implementation "me.tamkungz:examplelib:1.0.0"
+}

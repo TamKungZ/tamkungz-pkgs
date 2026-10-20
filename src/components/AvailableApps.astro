@@ -1,0 +1,67 @@
+---
+import type { AvailableApp } from "../lib/available-apps";
+
+interface Props {
+  apps: AvailableApp[];
+}
+
+const { apps } = Astro.props;
+---
+
+{
+  apps.length > 0 && (
+    <section class="available-apps" aria-labelledby="available-apps-title">
+      <div class="available-apps-head">
+        <h2 id="available-apps-title">Available apps</h2>
+        <span>{apps.length} {apps.length === 1 ? "app" : "apps"}</span>
+      </div>
+      <ul class="available-apps-list">
+        {apps.map((app) => (
+          <li class="available-app">
+            <span class="available-app-name">{app.name}</span>
+            <code>{app.id}</code>
+            <div class="available-app-actions">
+              {
+                app.sourceUrl ? (
+                  <a class="source-link" href={app.sourceUrl} aria-label={`GitHub source for ${app.name}`} title="GitHub source" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+                      <path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.49-2.7-.95-2.7-.95-.36-.93-.9-1.18-.9-1.18-.73-.5.06-.49.06-.49.8.06 1.22.82 1.22.82.71 1.21 1.86.86 2.32.66.07-.52.28-.86.5-1.06-1.78-.2-3.65-.89-3.65-3.96 0-.88.31-1.6.82-2.17-.08-.2-.36-1.03.08-2.14 0 0 .67-.22 2.2.83A7.65 7.65 0 0 1 8 4.46c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.83 2.2-.83.44 1.11.16 1.94.08 2.14.51.57.82 1.29.82 2.17 0 3.08-1.87 3.76-3.66 3.96.29.25.54.73.54 1.47v2.17c0 .21.15.46.55.38A8 8 0 0 0 8 0Z" />
+                    </svg>
+                  </a>
+                ) : (
+                  <span class="source-link source-unavailable" aria-hidden="true" />
+                )
+              }
+              <button class="btn copy-app" type="button" data-command={app.installCommand} aria-label="Copy install command" title="Copy install command">
+                Copy
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>(".available-apps").forEach((root) => {
+    root.addEventListener("click", async (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>(".copy-app");
+      if (!button) return;
+
+      try {
+        await navigator.clipboard.writeText(button.dataset.command!);
+        button.textContent = "Copied";
+        button.classList.add("done");
+      } catch {
+        button.textContent = "Failed";
+        button.classList.add("failed");
+      }
+      setTimeout(() => {
+        button.textContent = "Copy";
+        button.classList.remove("done");
+        button.classList.remove("failed");
+      }, 1400);
+    });
+  });
+</script>

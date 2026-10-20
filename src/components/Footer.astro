@@ -1,0 +1,20 @@
+---
+import { AUTHOR, SITE } from "../config/site";
+import { BUILT_AT } from "../lib/build-info";
+---
+
+<footer>
+  <div class="wrap footer-in">
+    <div>
+      Made by <a href={AUTHOR.githubUrl}>{AUTHOR.name}</a>
+      &nbsp;&middot;&nbsp;<a href={`https://x.com/${AUTHOR.twitterHandle}`}>X</a>
+      &nbsp;&middot;&nbsp;<a href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
+      <div>Generated at {BUILT_AT}</div>
+    </div>
+    <div class="footer-links">
+      <a href={`${SITE.url}/terms/`}>Terms</a>
+      <a href={`${SITE.url}/privacy/`}>Privacy</a>
+      <a href={`${SITE.url}/license/`}>License</a>
+    </div>
+  </div>
+</footer>

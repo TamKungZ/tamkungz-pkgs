@@ -1,0 +1,214 @@
+---
+import type { MavenArtifact } from "../lib/maven-catalog";
+import { highlightCode } from "../lib/highlight";
+
+interface Props {
+  artifacts: MavenArtifact[];
+  repoUrl: string;
+}
+
+const { artifacts, repoUrl } = Astro.props;
+const selected = artifacts[0];
+const dependency = selected ? `${selected.groupId}:${selected.artifactId}:${selected.version}` : "";
+const snippets = [
+  {
+    format: "maven",
+    label: "Maven",
+    lang: "xml" as const,
+    code: `<repositories>
+    <repository>
+        <id>tamkungz</id>
+        <url>${repoUrl}</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>${selected?.groupId ?? ""}</groupId>
+        <artifactId>${selected?.artifactId ?? ""}</artifactId>
+        <version>${selected?.version ?? ""}</version>
+    </dependency>
+</dependencies>`,
+  },
+  {
+    format: "gradle-kotlin",
+    label: "Gradle (Kotlin)",
+    lang: "gradle" as const,
+    code: `repositories {
+    maven {
+        name = "TamKungZ"
+        url = uri("${repoUrl}")
+    }
+}
+
+dependencies {
+    implementation("${dependency}")
+}`,
+  },
+  {
+    format: "gradle-groovy",
+    label: "Gradle (Groovy)",
+    lang: "groovy" as const,
+    code: `repositories {
+    maven {
+        name = "TamKungZ"
+        url = uri("${repoUrl}")
+    }
+}
+
+dependencies {
+    implementation("${dependency}")
+}`,
+  },
+];
+const highlightedSnippets = await Promise.all(
+  snippets.map(({ code, lang }) => highlightCode(code, lang)),
+);
+---
+
+{
+  artifacts.length > 0 && (
+    <section class="install maven-install" aria-label="Maven dependency">
+      <div class="maven-select-row">
+        <div class="maven-field maven-artifact-field">
+          <label for="maven-artifact">Artifact</label>
+          <div class="maven-artifact-control">
+            <select id="maven-artifact" class="filter maven-select">
+              {artifacts.map((artifact, index) => (
+                <option
+                  value={`${artifact.groupId}:${artifact.artifactId}:${artifact.version}`}
+                  data-group-id={artifact.groupId}
+                  data-artifact-id={artifact.artifactId}
+                  data-version={artifact.version}
+                  data-source={artifact.sourceUrl ?? ""}
+                  selected={index === 0}
+                >
+                  {artifact.name} ({artifact.artifactId})
+                </option>
+              ))}
+            </select>
+            <a
+              class="source-link maven-source"
+              href={selected?.sourceUrl}
+              aria-label={`GitHub source for ${selected?.name}`}
+              title="GitHub source"
+              target="_blank"
+              rel="noopener noreferrer"
+              hidden={!selected?.sourceUrl}
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+                <path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.49-2.7-.95-2.7-.95-.36-.93-.9-1.18-.9-1.18-.73-.5.06-.49.06-.49.8.06 1.22.82 1.22.82.71 1.21 1.86.86 2.32.66.07-.52.28-.86.5-1.06-1.78-.2-3.65-.89-3.65-3.96 0-.88.31-1.6.82-2.17-.08-.2-.36-1.03.08-2.14 0 0 .67-.22 2.2.83A7.65 7.65 0 0 1 8 4.46c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.83 2.2-.83.44 1.11.16 1.94.08 2.14.51.57.82 1.29.82 2.17 0 3.08-1.87 3.76-3.66 3.96.29.25.54.73.54 1.47v2.17c0 .21.15.46.55.38A8 8 0 0 0 8 0Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="maven-field maven-format-field">
+          <label for="maven-format">Build tool</label>
+          <select id="maven-format" class="filter maven-format">
+            {snippets.map(({ format, label }, index) => (
+              <option value={format} selected={index === 0}>{label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      {snippets.map(({ format, label, lang }, index) => (
+        <div class="code-block" data-format={format} hidden={index !== 0}>
+          <div class="code-head">
+            <div class="code-title">
+              <span class="code-lang">{lang}</span>
+              <span class="code-label">{label} dependency</span>
+            </div>
+            <button class="btn maven-copy" type="button">Copy</button>
+          </div>
+          <div
+            class="code-output"
+            set:html={highlightedSnippets[index]}
+          />
+        </div>
+      ))}
+    </section>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>(".maven-install").forEach((root) => {
+    const select = root.querySelector<HTMLSelectElement>("#maven-artifact");
+    const format = root.querySelector<HTMLSelectElement>("#maven-format");
+    const blocks = [...root.querySelectorAll<HTMLElement>(".code-block")];
+    const initialArtifact = select?.selectedOptions[0];
+    let currentDependency = initialArtifact?.value ?? "";
+    let currentGroupId = initialArtifact?.dataset.groupId ?? "";
+    let currentArtifactId = initialArtifact?.dataset.artifactId ?? "";
+    let currentVersion = initialArtifact?.dataset.version ?? "";
+    const source = root.querySelector<HTMLAnchorElement>(".maven-source");
+
+    select?.addEventListener("change", () => {
+      const option = select.selectedOptions[0];
+      if (!option) return;
+      const nextGroupId = option.dataset.groupId;
+      const nextArtifactId = option.dataset.artifactId;
+      const nextVersion = option.dataset.version;
+      if (!nextGroupId || !nextArtifactId || !nextVersion) {
+        throw new Error("Selected Maven artifact is missing coordinate fields.");
+      }
+
+      for (const block of blocks) {
+        const code = block.querySelector<HTMLElement>("code");
+        if (!code) throw new Error(`Missing code element in the ${block.dataset.format} snippet.`);
+
+        const replacements = block.dataset.format === "maven"
+          ? [[currentGroupId, nextGroupId], [currentArtifactId, nextArtifactId], [currentVersion, nextVersion]]
+          : [[currentDependency, option.value]];
+        for (const [from, to] of replacements) {
+          if (from === to) continue;
+          const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+          let node = walker.nextNode();
+          let updated = false;
+          while (node) {
+            if (node.nodeValue?.includes(from)) {
+              node.nodeValue = node.nodeValue.replace(from, to);
+              updated = true;
+              break;
+            }
+            node = walker.nextNode();
+          }
+          if (!updated) throw new Error(`Unable to update the ${block.dataset.format} dependency snippet.`);
+        }
+      }
+      currentDependency = option.value;
+      currentGroupId = nextGroupId;
+      currentArtifactId = nextArtifactId;
+      currentVersion = nextVersion;
+      if (source) {
+        const sourceUrl = option.dataset.source;
+        source.hidden = !sourceUrl;
+        if (sourceUrl) {
+          source.href = sourceUrl;
+          source.setAttribute("aria-label", `GitHub source for ${option.textContent?.trim() ?? "selected artifact"}`);
+        }
+      }
+    });
+
+    format?.addEventListener("change", () => {
+      for (const block of blocks) block.hidden = block.dataset.format !== format.value;
+    });
+
+    root.addEventListener("click", async (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>(".maven-copy");
+      const code = button?.closest(".code-block")?.querySelector("code");
+      if (!button || !code) return;
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? "");
+        button.textContent = "Copied";
+        button.classList.add("done");
+      } catch {
+        button.textContent = "Failed";
+        button.classList.add("failed");
+      }
+      setTimeout(() => {
+        button.textContent = "Copy";
+        button.classList.remove("done", "failed");
+      }, 1400);
+    });
+  });
+</script>

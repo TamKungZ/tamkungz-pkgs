@@ -1,0 +1,44 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+}
+
+group = "me.tamkungz"
+version = "1.0.0"
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name = "Example Library"
+                description = "Example artifact published to TamKungZ Maven."
+                url = "https://packages.tamkungz.me/maven/"
+                licenses {
+                    license {
+                        name = "All Rights Reserved"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "TamKungZ"
+                        name = "TamKungZ"
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "localMaven"
+            url = uri(layout.buildDirectory.dir("maven-repo"))
+        }
+    }
+}

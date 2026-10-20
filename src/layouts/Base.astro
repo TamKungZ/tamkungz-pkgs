@@ -1,0 +1,122 @@
+---
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import { AUTHOR, PROJECT_ROOTS, SITE } from "../config/site";
+import { canonicalUrl } from "../lib/listing";
+import { hasSection } from "../lib/tree";
+
+interface Props {
+  title: string;
+  description: string;
+  /** "/" or "/apt/dists/" - used for breadcrumbs and the canonical URL. */
+  pathText: string;
+  siteName?: string;
+  ogType?: "website" | "article";
+}
+
+const { title, description, pathText, siteName = SITE.name, ogType = "website" } = Astro.props;
+const canonical = canonicalUrl(pathText);
+
+const segs = pathText.split("/").filter(Boolean);
+const isHome = segs.length === 0;
+const section = segs[0];
+// "TamKungZ_ Packages - /apt/" -> "/apt/" (the site name is already in the top bar)
+const prefix = `${siteName} - `;
+const heading = title.startsWith(prefix) ? title.slice(prefix.length) : title;
+const crumbs = segs.slice(0, -1).map((name, i) => ({ name, href: `/${segs.slice(0, i + 1).join("/")}/` }));
+const navItems = PROJECT_ROOTS.filter((r) => hasSection(r));
+
+const jsonLd = JSON.stringify(
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteName,
+    url: SITE.url,
+    creator: {
+      "@type": "Person",
+      name: AUTHOR.name,
+      email: `mailto:${AUTHOR.email}`,
+      sameAs: [`https://x.com/${AUTHOR.twitterHandle}`, AUTHOR.githubUrl],
+    },
+  },
+  null,
+  2,
+).replaceAll("</", "<\\/");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={SITE.faviconSvg} type="image/svg+xml" />
+    <link rel="icon" href={SITE.faviconIco} sizes="any" />
+    <link rel="shortcut icon" href={SITE.faviconIco} type="image/x-icon" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={siteName} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="author" content={AUTHOR.name} />
+    <meta name="twitter:site" content={`@${AUTHOR.twitterHandle}`} />
+    <meta name="twitter:creator" content={`@${AUTHOR.twitterHandle}`} />
+
+    <link rel="me" href={AUTHOR.githubUrl} />
+    <link rel="author" href={`mailto:${AUTHOR.email}`} />
+
+    <script is:inline src={SITE.analytics.src} data-key={SITE.analytics.key} async></script>
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+
+    <div class="topbar">
+      <div class="wrap topbar-in">
+        <a class="brand" href="/">
+          <img src={SITE.faviconSvg} alt="" width="24" height="24" />
+          <span>{SITE.name}</span>
+        </a>
+        <nav class="nav" aria-label="Repositories">
+          {navItems.map((r) => <a href={`/${r}/`} aria-current={section === r ? "page" : undefined}>{r}</a>)}
+        </nav>
+        <a class="nav-ext" href={AUTHOR.githubUrl}>GitHub</a>
+      </div>
+    </div>
+
+    <main class="wrap" id="content">
+      <header class="page-head">
+        {
+          !isHome && (
+            <nav class="crumbs" aria-label="Breadcrumb">
+              <a href="/">Home</a>
+              {crumbs.map((c) => (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <a href={c.href}>{c.name}</a>
+                </>
+              ))}
+            </nav>
+          )
+        }
+        <h1 class={heading.startsWith("/") ? "mono" : undefined}>{heading}</h1>
+        <p class="lead">{description}</p>
+      </header>
+
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

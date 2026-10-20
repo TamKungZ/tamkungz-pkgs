@@ -1,0 +1,112 @@
+---
+import type { Row } from "../lib/listing";
+
+interface Props {
+  rows: Row[];
+  /** Show the "../" row. */
+  showParent: boolean;
+}
+const { rows, showParent } = Astro.props;
+const showFilter = rows.length > 8;
+const folder = "M1.5 3.5A1 1 0 0 1 2.5 2.5h3.2l1.5 1.5h6.3a1 1 0 0 1 1 1v7.5a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1z";
+const file = "M3.5 1.5h5.6L12.5 4.9v9.1a.5.5 0 0 1-.5.5H3.5a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5zM9 1.7V5h3.3";
+---
+
+<section class="table-card" aria-label="Directory listing">
+  {
+    showFilter && (
+      <div class="toolbar">
+        <input class="filter" type="search" placeholder="Filter files…  (press / to focus)" aria-label="Filter files" autocomplete="off" />
+        <span class="count" aria-live="polite">{rows.length} items</span>
+      </div>
+    )
+  }
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Name</th><th class="type">Type</th><th class="size">Size</th><th class="act" aria-label="Actions"></th></tr>
+      </thead>
+      <tbody>
+        {
+          showParent && (
+            <tr class="row-directory" data-keep>
+              <td class="name"><a href="../"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d={folder} /></svg>../</a></td>
+              <td class="type"><span class="badge">parent</span></td>
+              <td class="size" />
+              <td class="act" />
+            </tr>
+          )
+        }
+        {
+          rows.map((row) => {
+            const isDir = row.label.endsWith("/");
+            return (
+              <tr class={row.rowClass} data-name={row.label.toLowerCase()} data-kind={row.kind}>
+                <td class="name">
+                  <a href={row.label}>
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d={isDir ? folder : file} /></svg>
+                    {row.label}
+                  </a>
+                </td>
+                <td class="type"><span class="badge">{row.kind}</span></td>
+                <td class="size">{row.size}</td>
+                <td class="act">{!isDir && <button class="btn copy-link" type="button" data-href={row.label}>Copy link</button>}</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+    <p class="empty" hidden>No files match your filter.</p>
+  </div>
+</section>
+
+<script>
+  const card = document.querySelector<HTMLElement>(".table-card");
+  const input = card?.querySelector<HTMLInputElement>(".filter");
+  if (card && input) {
+    const rows = [...card.querySelectorAll<HTMLElement>("tbody tr[data-name]")];
+    const count = card.querySelector<HTMLElement>(".count")!;
+    const empty = card.querySelector<HTMLElement>(".empty")!;
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      let shown = 0;
+      for (const tr of rows) {
+        const hit = !q || tr.dataset.name!.includes(q) || tr.dataset.kind!.includes(q);
+        tr.hidden = !hit;
+        if (hit) shown++;
+      }
+      count.textContent = q ? `${shown} of ${rows.length}` : `${rows.length} items`;
+      empty.hidden = shown > 0;
+    });
+    document.addEventListener("keydown", (e) => {
+      const t = e.target as HTMLElement;
+      if (e.key === "/" && !/INPUT|TEXTAREA/.test(t.tagName)) {
+        e.preventDefault();
+        input.focus();
+      }
+      if (e.key === "Escape" && document.activeElement === input) {
+        input.value = "";
+        input.dispatchEvent(new Event("input"));
+        input.blur();
+      }
+    });
+  }
+
+  card?.addEventListener("click", async (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(".copy-link");
+    if (!btn) return;
+    const url = new URL(btn.dataset.href!, location.href).href;
+    try {
+      await navigator.clipboard.writeText(url);
+      btn.textContent = "Copied";
+      btn.classList.add("done");
+    } catch {
+      btn.textContent = "Failed";
+    }
+    setTimeout(() => {
+      btn.textContent = "Copy link";
+      btn.classList.remove("done");
+    }, 1400);
+  });
+</script>

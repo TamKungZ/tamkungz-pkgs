@@ -1,0 +1,120 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz.nilkit",
+    "module": "nilkit",
+    "version": "4.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.8"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "nilkit-4.1.0.jar",
+          "url": "nilkit-4.1.0.jar",
+          "size": 456164,
+          "sha512": "bd39c1b4cf1762361c87cf24d0b7d5ae8dc082f5d7816ecdbefccadeb3c24b5f5923f63769a830a40a7033041ed7614bce5b7c6c3776d3dbbcb878783af789f9",
+          "sha256": "664b3ff3ee741d3043d55ee5442bd9e5bb392cf59b1837c4afa3a9364c28b826",
+          "sha1": "dc586effaa3b1807b41d7c3bad00d4b10ae0178e",
+          "md5": "be011f6d25901d0e0b41ad909b3b8562"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilkit-4.1.0.jar",
+          "url": "nilkit-4.1.0.jar",
+          "size": 456164,
+          "sha512": "bd39c1b4cf1762361c87cf24d0b7d5ae8dc082f5d7816ecdbefccadeb3c24b5f5923f63769a830a40a7033041ed7614bce5b7c6c3776d3dbbcb878783af789f9",
+          "sha256": "664b3ff3ee741d3043d55ee5442bd9e5bb392cf59b1837c4afa3a9364c28b826",
+          "sha1": "dc586effaa3b1807b41d7c3bad00d4b10ae0178e",
+          "md5": "be011f6d25901d0e0b41ad909b3b8562"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilkit-4.1.0-all.jar",
+          "url": "nilkit-4.1.0-all.jar",
+          "size": 10665647,
+          "sha512": "2491afefebee35b5fec1ea0023c14850f48dbd6e7b3be2022aba7a172fb8e2db514cdeee2ea73a3ca85aa021e6fc9cea7ad4ec74388b033e176c27018f65e026",
+          "sha256": "e8a5d1053b8c104678757e3a75f58a16a190b6e620df16c334171375c9bfccb3",
+          "sha1": "518d237bb9b4d363984f74443a4e30b33325790d",
+          "md5": "6661089eb291999ab22c7d3aa72e00f7"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilkit-4.1.0-sources.jar",
+          "url": "nilkit-4.1.0-sources.jar",
+          "size": 353263,
+          "sha512": "0942bf955ed6a70b02739923ecb22eba014ff08452fce84a6e9c37603f5de0f33208ad79be81876c7a1a3c82c9ab7698c7117fa01799d8f7efe9fd003d441bd6",
+          "sha256": "d4d67fc8cf9e1b1dae1ca0c2163bdaf17aefa3f6208d0a5d4215c4126567cb39",
+          "sha1": "802be32ea6cfeccacc100e8837c8049034d93b7d",
+          "md5": "655a5efe30dca6f5283932a8dab17a99"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "nilkit-4.1.0-javadoc.jar",
+          "url": "nilkit-4.1.0-javadoc.jar",
+          "size": 402819,
+          "sha512": "6c2d8f4deefe7b1e1eaae56c09be85773d6ac2193d28fb4a297371a0c39c0ff455de07c913b48abd76db44bd1e59d4ac51ba5b3baf80a574d3e2502214bb1d59",
+          "sha256": "7673de74cc9bad8b7f26e0399856159837cbc54b68b0de7209b6ea054032f794",
+          "sha1": "27e485dbc64e7a367546d95c31f8b9489f2cac0d",
+          "md5": "5b8d0fda86172b186de98cd662cc78a6"
+        }
+      ]
+    }
+  ]
+}

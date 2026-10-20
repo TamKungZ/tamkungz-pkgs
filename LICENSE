@@ -1,0 +1,39 @@
+TamKungZ_ Packages License
+
+Copyright (c) 2026 TamKungZ_
+
+This repository (https://packages.tamkungz.me) is a package hosting repository. It provides
+packages, release files, repository metadata and related files for download and installation,
+for example through apt, dnf, apk, xbps, pacman, Maven, Gradle and winget.
+
+1. Packages and projects
+
+   Projects and packages published here may have their own licenses. The license of each project
+   applies to that project's source code, binaries, packages and other artifacts, as specified by
+   that license. Publishing a project through this repository does not replace or change the
+   project's own license.
+
+   If a package does not state a license of its own (for example in its POM, documentation or
+   project page), all rights in it are reserved by its author.
+
+2. Use
+
+   You may download artifacts from this repository with package managers and dependency managers
+   for the purpose of installing, building, testing or running software, within the license of the
+   package concerned.
+
+3. Mirroring
+
+   Official distribution repositories and established community package repositories may mirror
+   packages from this repository when permitted by the applicable project license.
+
+   Do not create unofficial personal mirrors, PPAs, Launchpad repositories or independently hosted
+   copies of this repository without permission.
+
+   Mirroring does not transfer ownership of the packages, projects, repository metadata, names or
+   branding.
+
+4. Repository content
+
+   The website, repository metadata, names and branding of TamKungZ_ Packages are
+   Copyright (c) 2026 TamKungZ_. All rights reserved.

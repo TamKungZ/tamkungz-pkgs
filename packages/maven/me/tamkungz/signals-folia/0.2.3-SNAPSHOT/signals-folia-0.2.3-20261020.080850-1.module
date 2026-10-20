@@ -1,0 +1,139 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz",
+    "module": "signals-folia",
+    "version": "0.2.3-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-bukkit",
+          "version": {
+            "requires": "0.2.3-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-folia-0.2.3-SNAPSHOT.jar",
+          "url": "signals-folia-0.2.3-SNAPSHOT.jar",
+          "size": 12967,
+          "sha512": "68e26825bd25bd410f4f3da96eb8fbe86dad4e28be3d337f461465189675735cf216802c4970fceb5c9e4309b893c5398576ea2cee0f376dde0d699d28e65fe4",
+          "sha256": "7e4d80fc75431842a5edd430357c59820883eb75e97e12bbbd44b703509129be",
+          "sha1": "1b563bc3bc05ff47c2ae066d837100b2efd918de",
+          "md5": "9a3bc07254e69f1232eeb52539a7a4e6"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-bukkit",
+          "version": {
+            "requires": "0.2.3-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-folia-0.2.3-SNAPSHOT.jar",
+          "url": "signals-folia-0.2.3-SNAPSHOT.jar",
+          "size": 12967,
+          "sha512": "68e26825bd25bd410f4f3da96eb8fbe86dad4e28be3d337f461465189675735cf216802c4970fceb5c9e4309b893c5398576ea2cee0f376dde0d699d28e65fe4",
+          "sha256": "7e4d80fc75431842a5edd430357c59820883eb75e97e12bbbd44b703509129be",
+          "sha1": "1b563bc3bc05ff47c2ae066d837100b2efd918de",
+          "md5": "9a3bc07254e69f1232eeb52539a7a4e6"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-folia-0.2.3-SNAPSHOT-sources.jar",
+          "url": "signals-folia-0.2.3-SNAPSHOT-sources.jar",
+          "size": 11696,
+          "sha512": "8aab31622ed44be7768f6d3d306b285f94a317fd9d7f600e28a5731d1145b5d6807ab7f013e6fd3210fae2104b315864cce14c0e08fa5369c4b6a0c517378d60",
+          "sha256": "673ee56b1f7f8e4c91c4965b65d659a5ebb9640bddd332c3fb332f5561081387",
+          "sha1": "379ae6b6bb2a8c684ea17afa8f789234d21d3280",
+          "md5": "0f73202d9aad2bdbb1f9f3d02f246afc"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-folia-0.2.3-SNAPSHOT-javadoc.jar",
+          "url": "signals-folia-0.2.3-SNAPSHOT-javadoc.jar",
+          "size": 96336,
+          "sha512": "9b7fbf2579de46c8f7c3da12907e912cd79c5146d3b599bfaf20dd7122386ecc7a53b1bdaf8439a95bb7b118b9e7ffb054682b339b000443c80da43f97a5cbc3",
+          "sha256": "5ecd282e313ccbe06e4358eae05444dca10d5db4b6a34820debba4f643babc28",
+          "sha1": "273f40059eca361f1a7be0b2ee3df683276ff8ec",
+          "md5": "3676425205939bd0ce27c30abd1212a4"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-folia-0.2.3-SNAPSHOT-all.jar",
+          "url": "signals-folia-0.2.3-SNAPSHOT-all.jar",
+          "size": 51725,
+          "sha512": "79ee2d60c42f4d58420019fadb0167f7543b39891b6764d782b9728dc379e275abfba77df72919d44be0e7bf6120b1cb7415fb504cffbe3a13b18b2afa884132",
+          "sha256": "7435fde7279e0c3446bc7d6215d9c3eb5b0e6fabed8627a343a871cb8b18af89",
+          "sha1": "0a5e84a01399179197d20bb6b957db848f31859a",
+          "md5": "699ee882a131b3c67ae5946f565eaf92"
+        }
+      ]
+    }
+  ]
+}

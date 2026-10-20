@@ -1,0 +1,139 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz",
+    "module": "signals-velocity",
+    "version": "0.2.1-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-core",
+          "version": {
+            "requires": "0.2.1-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-velocity-0.2.1-SNAPSHOT.jar",
+          "url": "signals-velocity-0.2.1-SNAPSHOT.jar",
+          "size": 16882,
+          "sha512": "d3dd20cf4ddd27bc67815c7e0e64046949b3c3d050e0797bdd7a3086a9f4fdb3ddc664252a1ab50c64d145a42e6c8d78f1ef9de2b55d0519224a9c1fa775262c",
+          "sha256": "ccee17a4c8ca14f679fc0639a784ee33212cf8d7e42cc73a023f7c2e046441e5",
+          "sha1": "d1f05f462e4152bd156cbf887b0e05ca61a3e019",
+          "md5": "00c7fa30cd83286e8827304003ea1d3c"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-core",
+          "version": {
+            "requires": "0.2.1-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-velocity-0.2.1-SNAPSHOT.jar",
+          "url": "signals-velocity-0.2.1-SNAPSHOT.jar",
+          "size": 16882,
+          "sha512": "d3dd20cf4ddd27bc67815c7e0e64046949b3c3d050e0797bdd7a3086a9f4fdb3ddc664252a1ab50c64d145a42e6c8d78f1ef9de2b55d0519224a9c1fa775262c",
+          "sha256": "ccee17a4c8ca14f679fc0639a784ee33212cf8d7e42cc73a023f7c2e046441e5",
+          "sha1": "d1f05f462e4152bd156cbf887b0e05ca61a3e019",
+          "md5": "00c7fa30cd83286e8827304003ea1d3c"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-velocity-0.2.1-SNAPSHOT-sources.jar",
+          "url": "signals-velocity-0.2.1-SNAPSHOT-sources.jar",
+          "size": 15974,
+          "sha512": "8a5aea968bd02afc69133d2421e14be9e1f1f57dafec1c7298faf1a5d63c6a043215f0d033a0ea12aede7e0d6f9c6de4cae0e884056c55ea34108a7202284eb1",
+          "sha256": "afdfa7facb2d49a3887f94e777b77ccf0bad4d097b61b1a52bb95ad90b15d613",
+          "sha1": "8ecf77565b484ca110ef45433d7cae11a53cf8ce",
+          "md5": "dea3b1f08e12198d2f58a40f18d95283"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-velocity-0.2.1-SNAPSHOT-javadoc.jar",
+          "url": "signals-velocity-0.2.1-SNAPSHOT-javadoc.jar",
+          "size": 4189266,
+          "sha512": "96b702c21963939c69484f4a224dc55a5da14b40bb4fab67da46bfa1a0c816d952c4e8118f956aa6673b94a542866355ae310f50bebaf1a20121a7475cc5583c",
+          "sha256": "034066d241df2bc0b933d4fe71f9cb7a3efe5e06b135f127de2a188586aedc10",
+          "sha1": "6f71034293a500e3796446f6c9b3641886862909",
+          "md5": "d2c680df6f983a6b0d47cb7cd080aa67"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-velocity-0.2.1-SNAPSHOT-all.jar",
+          "url": "signals-velocity-0.2.1-SNAPSHOT-all.jar",
+          "size": 42578,
+          "sha512": "933b9c41ae39aa0154d14e2b432e313d9e12f0f16aa6ca997e17c2576c8fb91d279fdf7cb0e9f1eea8c7db078afa41599771a190c82fb60a0256e3d6052755e6",
+          "sha256": "3bd194bad0678f5d54bf68232fc30bb243b613ba73bb5dd5c4b9173347e7338d",
+          "sha1": "b081226172374f48f79ada0a7c5942777b3983ab",
+          "md5": "7d82e96527c473e7017359d22faff87f"
+        }
+      ]
+    }
+  ]
+}

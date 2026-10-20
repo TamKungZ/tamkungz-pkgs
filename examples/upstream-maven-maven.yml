@@ -1,0 +1,61 @@
+# Apache Maven publisher for the Maven repository.
+#
+# Copy to .github/workflows/release.yml. The project must use Maven Wrapper and have
+# a deployable project version matching the tag (for example tag v1.2.3 -> 1.2.3).
+# This uses Maven Deploy Plugin's altDeploymentRepository to write to a temporary
+# file-based repository; no credential or external Maven server is needed. Pin
+# maven-deploy-plugin to 3.1.3 in the project because this workflow uses its id::url syntax.
+
+name: Publish Maven artifacts
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Deploy to a temporary local Maven repository
+        run: |
+          set -euo pipefail
+          chmod +x ./mvnw
+          ./mvnw --batch-mode --no-transfer-progress clean package \
+            org.apache.maven.plugins:maven-deploy-plugin:3.1.3:deploy \
+            "-DaltDeploymentRepository=packages::file://${GITHUB_WORKSPACE}/target/maven-repo"
+          test -d target/maven-repo
+          find target/maven-repo -type f -print -quit | grep -q .
+          mkdir -p dist
+          (cd target/maven-repo && zip -qr "$GITHUB_WORKSPACE/dist/maven-repo.zip" .)
+
+      - name: Create GitHub release and upload repository bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/maven-repo.zip \
+            --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag
+
+      - name: Ask the package repository to publish this release
+        env:
+          GH_TOKEN: ${{ secrets.PACKAGES_DISPATCH_TOKEN }}
+          SOURCE: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          PACKAGES_REPO: TamKungZ/tamkungz-pkgs
+        run: |
+          gh workflow run publish.yml --repo "$PACKAGES_REPO" --ref main \
+            -f source="$SOURCE" -f tag="$TAG"

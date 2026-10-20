@@ -1,0 +1,139 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz",
+    "module": "signals-bukkit",
+    "version": "0.2.1-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-core",
+          "version": {
+            "requires": "0.2.1-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-bukkit-0.2.1-SNAPSHOT.jar",
+          "url": "signals-bukkit-0.2.1-SNAPSHOT.jar",
+          "size": 18713,
+          "sha512": "9adcdcafd3bf18946c772ce4dee85d9764c857ddfedc1191231226fdb4a722ff1114a9139466e317b3dd35fe74cec088fa6a986b5fa72b81e58424bd4553f9fc",
+          "sha256": "89bdea421b31faba80f04f52c46d8020a2d6966c6b29654bdfb5598a77196d3b",
+          "sha1": "36a9fc600ba61f8fc0ae14ca03764c5f6144fc52",
+          "md5": "6283789a225b09dddd2419c9ae27a47b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "me.tamkungz",
+          "module": "signals-core",
+          "version": {
+            "requires": "0.2.1-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-bukkit-0.2.1-SNAPSHOT.jar",
+          "url": "signals-bukkit-0.2.1-SNAPSHOT.jar",
+          "size": 18713,
+          "sha512": "9adcdcafd3bf18946c772ce4dee85d9764c857ddfedc1191231226fdb4a722ff1114a9139466e317b3dd35fe74cec088fa6a986b5fa72b81e58424bd4553f9fc",
+          "sha256": "89bdea421b31faba80f04f52c46d8020a2d6966c6b29654bdfb5598a77196d3b",
+          "sha1": "36a9fc600ba61f8fc0ae14ca03764c5f6144fc52",
+          "md5": "6283789a225b09dddd2419c9ae27a47b"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-bukkit-0.2.1-SNAPSHOT-sources.jar",
+          "url": "signals-bukkit-0.2.1-SNAPSHOT-sources.jar",
+          "size": 15977,
+          "sha512": "9407ab0d4da80fa92f73ee0717aa6ff66e885edbba95768f4d65dee34dc64b2d0d21e9c679b02602fbf1476e14c2db607fcee6748b4d417e0a57fe08190b64c7",
+          "sha256": "dabf089ecda511d9c685fbc546aa1324adbbd21b6624123e1fbc600354f7d60c",
+          "sha1": "1b51f7375649653c9c2f2b5291144158ba80108b",
+          "md5": "81031fbbb4c0f7d582c32a57cc33aaaf"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-bukkit-0.2.1-SNAPSHOT-javadoc.jar",
+          "url": "signals-bukkit-0.2.1-SNAPSHOT-javadoc.jar",
+          "size": 4191910,
+          "sha512": "6e6a12ea13805663d9f848e1df905d51616938d021a976fc60f4450c4f30e5a5bc78baad7284e767d4a1bdd785486c15ae0e717fd5ed95ac0b6eaf2f34507b65",
+          "sha256": "c96d400eb125bf201699699a5910449a377595ba8922e0f6da564315039d6cbb",
+          "sha1": "db1076d84f34a10e2e592ea14e09a04d08536366",
+          "md5": "b2a9f26e3b73e5dbf972cc84cfcfb4fe"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-bukkit-0.2.1-SNAPSHOT-all.jar",
+          "url": "signals-bukkit-0.2.1-SNAPSHOT-all.jar",
+          "size": 44457,
+          "sha512": "af2b3fbad8b298e8d9d7edce2cd79ac5607638998e38cd5f83f92122a9a252827070eab3ae95f4013c96fb9f01ccf7a6af8a043e171125e6f5a73dd93fdb5697",
+          "sha256": "132aed2dcfa9647aa68b1f0c52b9818ff6ca04af79d09938b88c7afd52505944",
+          "sha1": "767c4801ff734b545b0d36ab241cadc0b5958cdc",
+          "md5": "451ada6cd4006f4da1567b0c341f4382"
+        }
+      ]
+    }
+  ]
+}

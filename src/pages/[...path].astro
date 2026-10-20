@@ -1,0 +1,40 @@
+---
+import type { InferGetStaticPropsType } from "astro";
+import AvailableApps from "../components/AvailableApps.astro";
+import FileTable from "../components/FileTable.astro";
+import InstallSection from "../components/InstallSection.astro";
+import MavenInstall from "../components/MavenInstall.astro";
+import Base from "../layouts/Base.astro";
+import { listAvailableApps } from "../lib/available-apps";
+import { getPageMeta, getRows } from "../lib/listing";
+import { listMavenArtifacts } from "../lib/maven-catalog";
+import { listDirectories } from "../lib/tree";
+import { SITE } from "../config/site";
+
+/** One page per folder in packages/ (the home page is the folder root). */
+export function getStaticPaths() {
+  return listDirectories().map((segments) => ({
+    params: { path: segments.length > 0 ? segments.join("/") : undefined },
+    props: { segments },
+  }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { segments } = Astro.props;
+
+const meta = getPageMeta(segments);
+const rows = getRows(segments);
+const availableApps = segments.length === 1 ? listAvailableApps(segments[0]) : [];
+const isMavenRoot = segments.length === 1 && segments[0] === "maven";
+const mavenArtifacts = isMavenRoot ? listMavenArtifacts() : [];
+// No "../" on the home page, nor on /maven/ (same as the original generator).
+const showParent = segments.length > (segments[0] === "maven" ? 1 : 0);
+---
+
+<Base title={meta.title} description={meta.description} pathText={meta.pathText} siteName={meta.siteName}>
+  {isMavenRoot
+    ? <MavenInstall artifacts={mavenArtifacts} repoUrl={`${SITE.url}/maven/`} />
+    : meta.usage && <InstallSection blocks={meta.usage} />}
+  <AvailableApps apps={availableApps} />
+  <FileTable rows={rows} showParent={showParent} />
+</Base>

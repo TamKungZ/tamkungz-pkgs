@@ -1,0 +1,148 @@
+name: Publish from upstream release
+
+# Called by other projects' workflows (see examples/upstream-publish.yml) or run by hand:
+#   gh workflow run publish.yml -f source=TamKungZ/livedesk -f tag=v1.2.3
+#
+# 1. checks the repo is allowed (publish.config.ts)
+# 2. downloads the release assets
+# 3. sorts them into packages/ (tools/ingest.ts) and commits that to main
+# 4. deploys (deploy.yml signs the metadata and builds the site)
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Upstream repository, owner/name
+        type: string
+        required: true
+      tag:
+        description: Release tag (empty = latest release)
+        type: string
+        required: false
+      overwrite:
+        description: Replace files that already exist with different content
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.ingest.outputs.changed }}
+      sha: ${{ steps.push.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install tools used to read package metadata
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends dpkg-dev rpm unzip
+
+      - run: npm ci
+
+      # Inputs go through env vars, never straight into a shell line.
+      - name: Check the source is allowed
+        env:
+          SOURCE: ${{ inputs.source }}
+          TAG: ${{ inputs.tag }}
+        run: npm run check:source
+
+      - name: Download release assets
+        id: release
+        env:
+          # Public upstream repos need no token. For a private one add a read-only
+          # fine-grained token as secret UPSTREAM_READ_TOKEN.
+          GH_TOKEN: ${{ secrets.UPSTREAM_READ_TOKEN || github.token }}
+          SOURCE: ${{ inputs.source }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/release"
+          tag="$(gh release view ${TAG:+"$TAG"} --repo "$SOURCE" --json tagName --jq .tagName)"
+          gh release download "$tag" --repo "$SOURCE" --dir "$RUNNER_TEMP/release" --clobber
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          ls -la "$RUNNER_TEMP/release"
+
+      - name: Version ImageMerge package filenames
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          for pair in \
+            "ImageMerge-linux-x64.deb|imagemerge_${version}_amd64.deb" \
+            "ImageMerge-linux-x64.rpm|imagemerge-${version}-1.x86_64.rpm"; do
+            source="${RUNNER_TEMP}/release/${pair%%|*}"
+            target="${RUNNER_TEMP}/release/${pair#*|}"
+            if [ ! -f "$source" ]; then
+              continue
+            fi
+            if [ -e "$target" ]; then
+              if ! cmp -s "$source" "$target"; then
+                echo "::error::Both fixed-name and versioned ImageMerge packages exist with different content: $(basename "$target")"
+                exit 1
+              fi
+              rm "$source"
+            else
+              mv "$source" "$target"
+            fi
+          done
+          ls -la "$RUNNER_TEMP/release"
+
+      - name: Sort assets into packages/
+        id: ingest
+        env:
+          OVERWRITE: ${{ inputs.overwrite && '--overwrite' || '' }}
+        run: npm run ingest -- "$RUNNER_TEMP/release" $OVERWRITE
+
+      - name: Commit to main
+        id: push
+        if: steps.ingest.outputs.changed == 'true'
+        env:
+          SOURCE: ${{ inputs.source }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages
+          git commit -m "Publish $SOURCE ${TAG:-latest}"
+          pushed=false
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then pushed=true; break; fi
+            echo "push rejected (attempt $attempt), rebasing"
+            git pull --rebase origin main
+          done
+          if [ "$pushed" != true ]; then
+            echo "Could not push to main (branch protection? concurrent pushes?)" >&2
+            exit 1
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: ingest
+    if: needs.ingest.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Trigger deployment for latest main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main --repo "$GITHUB_REPOSITORY"

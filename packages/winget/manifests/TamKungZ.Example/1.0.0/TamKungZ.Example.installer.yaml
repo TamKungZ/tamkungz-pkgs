@@ -1,0 +1,13 @@
+# Replace InstallerUrl and InstallerSha256 with the real Windows installer.
+PackageIdentifier: TamKungZ.Example
+PackageVersion: 1.0.0
+InstallerType: exe
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://packages.tamkungz.me/winget/installers/example/1.0.0/example-1.0.0-x64.exe
+    InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000
+  - Architecture: arm64
+    InstallerUrl: https://packages.tamkungz.me/winget/installers/example/1.0.0/example-1.0.0-arm64.exe
+    InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000
+ManifestType: installer
+ManifestVersion: 1.10.0
