@@ -3,12 +3,13 @@
   <groupId>me.tamkungz</groupId>
   <artifactId>signals-bungeecord</artifactId>
   <versioning>
-    <latest>0.2.3-SNAPSHOT</latest>
+    <latest>0.2.4-SNAPSHOT</latest>
     <versions>
       <version>0.2.1-SNAPSHOT</version>
       <version>0.2.2-SNAPSHOT</version>
       <version>0.2.3-SNAPSHOT</version>
+      <version>0.2.4-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20261020081832</lastUpdated>
+    <lastUpdated>20261021073035</lastUpdated>
   </versioning>
 </metadata>

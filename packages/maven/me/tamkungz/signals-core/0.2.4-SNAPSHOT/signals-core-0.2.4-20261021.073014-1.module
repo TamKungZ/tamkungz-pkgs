@@ -1,0 +1,118 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "me.tamkungz",
+    "module": "signals-core",
+    "version": "0.2.4-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "foo.zaaarf.geb",
+          "module": "core",
+          "version": {
+            "requires": "0.5.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-core-0.2.4-SNAPSHOT.jar",
+          "url": "signals-core-0.2.4-SNAPSHOT.jar",
+          "size": 28770,
+          "sha512": "49f153aae64d0c21c21c8d2d5dc3af03f4792a3f5dff706dd89c85e0a90f2560032b724fc93ffc1535085a2143bdaee00ca9d4f1d741b5b3ac2e07173feb6c60",
+          "sha256": "f3626443181be9a3a65703dde0fb7fdb99b23fb8b1492b2fa92f3764cae62147",
+          "sha1": "cbea103db36e9e7e62819ec01ca9deb294e87e2c",
+          "md5": "2432867e992019ecf3db4be772687ef9"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "foo.zaaarf.geb",
+          "module": "core",
+          "version": {
+            "requires": "0.5.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "signals-core-0.2.4-SNAPSHOT.jar",
+          "url": "signals-core-0.2.4-SNAPSHOT.jar",
+          "size": 28770,
+          "sha512": "49f153aae64d0c21c21c8d2d5dc3af03f4792a3f5dff706dd89c85e0a90f2560032b724fc93ffc1535085a2143bdaee00ca9d4f1d741b5b3ac2e07173feb6c60",
+          "sha256": "f3626443181be9a3a65703dde0fb7fdb99b23fb8b1492b2fa92f3764cae62147",
+          "sha1": "cbea103db36e9e7e62819ec01ca9deb294e87e2c",
+          "md5": "2432867e992019ecf3db4be772687ef9"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-core-0.2.4-SNAPSHOT-sources.jar",
+          "url": "signals-core-0.2.4-SNAPSHOT-sources.jar",
+          "size": 22573,
+          "sha512": "2d8421966cfc2e88a650be71dfea8f577344cc0328091ae63cf4841e9c4793cf4f599d8320550ff573fea811f54d54bed0b97030432647333cf940c6177e7077",
+          "sha256": "5814ffcfb010316d47fd5248de18cfd8b4d7e54355da3242267e4400b3ca8b2a",
+          "sha1": "356302c2ddf08bd433afee5b4c9d729d34e37924",
+          "md5": "33247464c069a449af9fe6aca4cd27a4"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "signals-core-0.2.4-SNAPSHOT-javadoc.jar",
+          "url": "signals-core-0.2.4-SNAPSHOT-javadoc.jar",
+          "size": 4205458,
+          "sha512": "d6c9e391da61d599991d9e7fd2d4ef52479ac5d832c141f9f69293955f9e49dc48fde77f57219677bf4395fd1380c7c22cc8c76a7ad9d906daf4c8b8a8546125",
+          "sha256": "74e35af185328200649b0eda1578802ab195de408f93733559f398260c1c88ea",
+          "sha1": "f21fee36943e4a93c9d20c61ea0c3d1786e41008",
+          "md5": "476ac3af5babb181225d674b1c62d98b"
+        }
+      ]
+    }
+  ]
+}
